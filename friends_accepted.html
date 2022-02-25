@@ -31,8 +31,8 @@
         <div class="friends">
             <i class="uil uil-heart"></i>
         </div>
-        <div class="Profile">
-            <i class="uil uil-user"></i>
+        <div class="Profile" onclick="location.href='./profile.html'">
+          <i class="uil uil-user"></i>
         </div>
         <div class="Profile-picture">
             <img src="./image/PP1.jpg">
@@ -41,16 +41,16 @@
     </nav>
     <main>
         <div class="container">
-        <table >
+          <table >
             <tr>
-                <td>
-                    <div class="expenditure">
-                        <button class="button2" type="button">REQUESTED</button>
+                  <td>
+                    <div class="requested">
+                        <button id="requested_button" class="button2 " type="button" onclick="location.href='./friends_requested.html'" onclick="requested_friends()">REQUESTED</button>
                     </div>
                 </td>
                 <td>
-                    <div class="friends">
-                        <button class="button2" type="button">ACCEPTED</button>
+                    <div class="accepted">
+                        <button id="accepted_button" style="background-color: pink" class="button2" type="button" onclick="location.href='./friends_accepted.html'" onclick="accepted_friends()">ACCEPTED</button>
                     </div>
                 </td>
             </tr>

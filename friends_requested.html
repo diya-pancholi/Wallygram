@@ -31,7 +31,7 @@
         <div class="friends">
             <i class="uil uil-heart"></i>
         </div>
-        <div class="Profile">
+        <div class="Profile" onclick="location.href='./profile.html'">
             <i class="uil uil-user"></i>
         </div>
         <div class="Profile-picture">
@@ -41,28 +41,28 @@
     </nav>
     <main>
         <div class="container">
-        <table >
-            <tr>
-<!--                <td>-->
+            <table >
+                <tr>
+    <!--                <td>-->
 
-<!--                </td>-->
-<!--                <td>-->
-<!--                    <div class="posts">-->
-<!--                        <button class="button2" type="button">POSTS</button>-->
-<!--                    </div>-->
-<!--                </td>-->
-                <td>
-                    <div class="expenditure">
-                        <button class="button2" type="button">REQUESTED</button>
-                    </div>
-                </td>
-                <td>
-                    <div class="friends">
-                        <button class="button2" type="button">ACCEPTED</button>
-                    </div>
-                </td>
-            </tr>
-        </table>
+    <!--                </td>-->
+    <!--                <td>-->
+    <!--                    <div class="posts">-->
+    <!--                        <button class="button2" type="button">POSTS</button>-->
+    <!--                    </div>-->
+    <!--                </td>-->
+                    <td>
+                        <div class="requested">
+                            <button id="requested_button" style="background-color: pink" class="button2 " type="button" onclick="location.href='./friends_requested.html'">REQUESTED</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="accepted">
+                            <button id="accepted_button" class="button2" type="button" onclick="location.href='./friends_accepted.html'">ACCEPTED</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
 <!--        <div class="my-posts">-->
 <!--        <div class="single-post">-->
