@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<title>Expenditure Page</title>
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cookie&family=Dancing+Script:wght@700&family=Great+Vibes&family=Permanent+Marker&family=Redressed&family=Sacramento&family=Satisfy&display=swap');
+    </style>
+     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h2 class="log app-name">
+                Wallygram
+            </h2>
+            <div class="search-bar">
+                <i class="uil uil-search"></i>
+                <input type="search" placeholder="Search for your friends, inspirations and influencers">
+            </div>
+        <div class="home">
+            <i class="uil uil-house-user"></i>
+        </div>
+        <div class="friends" onclick="location.href='./friends_requested.html'">
+            <i class="uil uil-heart"></i>
+        </div>
+        <div class="Profile" onclick="location.href='./profile.html'">
+          <i class="uil uil-user"></i>
+        </div>
+        <div class="Profile-picture">
+            <img src="./image/PP1.jpg">
+        </div>
+        </div>
+    </nav>
+    <main>
+        <div class="categories">
+            <img src="./image/caption.PNG">
+        </div>
+        <div class="chartCard">
+            <div class="chartBox">
+                <canvas id="myChart1" class="canvasDesign"></canvas>
+                <div class="month">
+                    <button class="button3" type="button">MARCH 2022</button>
+                </div>
+            </div>
+            <div class="chartBox">
+                <canvas id="myChart2"> </canvas>
+                <div class="month">
+                    <button class="button3" type="button">FEBRUARY 2022</button>
+                </div>
+            </div>
+            <div class="chartBox">
+                <canvas id="myChart3"> </canvas>
+                <div class="month">
+                    <button class="button3" type="button">JANUARY 2022</button>
+                </div>
+            </div>
+        </div>
+        <div class="chartCard">
+            <div class="chartBox">
+                <canvas id="myChart4" class="canvasDesign"></canvas>
+                <div class="month">
+                    <button class="button3" type="button">DECEMBER 2021</button>
+                </div>
+            </div>
+            <div class="chartBox">
+                <canvas id="myChart5"> </canvas>
+                <div class="month">
+                    <button class="button3" type="button">NOVEMBER 2021</button>
+                </div>
+            </div>
+            <div class="chartBox">
+                <canvas id="myChart6"> </canvas>
+                <div class="month">
+                    <button class="button3" type="button">OCTOBER 2021</button>
+                </div>
+            </div>
+        </div>
+        <script>
+      const data1 = {
+          labels: [
+            'Shopping',
+            'Food',
+            'Bills',
+            'Savings',
+            'Health',
+            'Misc'
+          ],
+          datasets: [{
+            label: 'First Pie chart',
+            data: [
+                { financials: 'Shopping', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Food', url: './Expense_category.html', amount: { usd: 30 }},
+                { financials: 'Bills', url: './Expense_category.html', amount: { usd: 20 }},
+                { financials: 'Savings', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Health', url: './Expense_category.html', amount: { usd: 15 }},
+                { financials: 'Misc', url: './Expense_category.html', amount: { usd: 15 }},
+            ],
+            backgroundColor: [
+              'rgb(100, 255, 100)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 99, 132)',
+              'rgb(160, 160, 160)',
+              'rgb(255, 0, 127)',
+            ],
+            hoverOffset: 4
+          }]
+        };
+
+      const config1 = {
+          type: 'doughnut',
+          data: data1,
+          options: {
+              plugins: {
+                  legend: {
+                      display: false,
+                  }
+              },
+              parsing: {
+                 key: 'amount.usd'
+              }
+          }
+        };
+
+      const ctx1 = document.getElementById('myChart1');
+      const myChart1 = new Chart(
+        ctx1,
+        config1
+      );
+
+      function pieLink1(click){
+          const clickedInfo1 = myChart1.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+          if (clickedInfo1.length) {
+            const pieSlice1 = clickedInfo1[0];
+            console.log(pieSlice1.datasetIndex);
+            console.log(pieSlice1.index);
+            const link1 = myChart1.data.datasets[pieSlice1.datasetIndex].data[pieSlice1.index].url;
+            window.open(link1);
+          }
+      }
+      ctx1.onclick = pieLink1;
+
+      const data2 = {
+          labels: [
+            'Shopping',
+            'Food',
+            'Bills',
+            'Savings',
+            'Health',
+            'Misc'
+          ],
+          datasets: [{
+            label: 'First Pie chart',
+            data: [
+                { financials: 'Shopping', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Food', url: './Expense_category.html', amount: { usd: 30 }},
+                { financials: 'Bills', url: './Expense_category.html', amount: { usd: 20 }},
+                { financials: 'Savings', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Health', url: './Expense_category.html', amount: { usd: 15 }},
+                { financials: 'Misc', url: './Expense_category.html', amount: { usd: 15 }},
+            ],
+            backgroundColor: [
+              'rgb(100, 255, 100)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 99, 132)',
+              'rgb(160, 160, 160)',
+              'rgb(255, 0, 127)',
+            ],
+            hoverOffset: 4
+          }]
+        };
+
+      const config2 = {
+          type: 'doughnut',
+          data: data2,
+          options: {
+              plugins: {
+                  legend: {
+                      display: false,
+                  }
+              },
+              parsing: {
+                 key: 'amount.usd'
+              }
+          }
+        };
+
+      const ctx2 = document.getElementById('myChart2');
+      const myChart2 = new Chart(
+        ctx2,
+        config2
+      );
+
+      function pieLink2(click){
+          const clickedInfo2 = myChart2.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+          if (clickedInfo2.length) {
+            const pieSlice2 = clickedInfo2[0];
+            console.log(pieSlice2.datasetIndex);
+            console.log(pieSlice2.index);
+            const link2 = myChart2.data.datasets[pieSlice2.datasetIndex].data[pieSlice2.index].url;
+            window.open(link2);
+          }
+      }
+      ctx2.onclick = pieLink2;
+
+      const data3 = {
+          labels: [
+            'Shopping',
+            'Food',
+            'Bills',
+            'Savings',
+            'Health',
+            'Misc'
+          ],
+          datasets: [{
+            label: 'First Pie chart',
+            data: [
+                { financials: 'Shopping', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Food', url: './Expense_category.html', amount: { usd: 30 }},
+                { financials: 'Bills', url: './Expense_category.html', amount: { usd: 20 }},
+                { financials: 'Savings', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Health', url: './Expense_category.html', amount: { usd: 15 }},
+                { financials: 'Misc', url: './Expense_category.html', amount: { usd: 15 }},
+            ],
+            backgroundColor: [
+              'rgb(100, 255, 100)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 99, 132)',
+              'rgb(160, 160, 160)',
+              'rgb(255, 0, 127)',
+            ],
+            hoverOffset: 4
+          }]
+        };
+
+      const config3 = {
+          type: 'doughnut',
+          data: data3,
+          options: {
+              plugins: {
+                  legend: {
+                      display: false,
+                  }
+              },
+              parsing: {
+                 key: 'amount.usd'
+              }
+          }
+        };
+
+      const ctx3 = document.getElementById('myChart3');
+      const myChart3 = new Chart(
+        ctx3,
+        config3
+      );
+
+      function pieLink3(click){
+          const clickedInfo3 = myChart3.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+          if (clickedInfo3.length) {
+            const pieSlice3 = clickedInfo3[0];
+            console.log(pieSlice3.datasetIndex);
+            console.log(pieSlice3.index);
+            const link3 = myChart3.data.datasets[pieSlice3.datasetIndex].data[pieSlice3.index].url;
+            window.open(link3);
+          }
+      }
+      ctx3.onclick = pieLink3;
+
+      const data4 = {
+          labels: [
+            'Shopping',
+            'Food',
+            'Bills',
+            'Savings',
+            'Health',
+            'Misc'
+          ],
+          datasets: [{
+            label: 'First Pie chart',
+            data: [
+                { financials: 'Shopping', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Food', url: './Expense_category.html', amount: { usd: 30 }},
+                { financials: 'Bills', url: './Expense_category.html', amount: { usd: 20 }},
+                { financials: 'Savings', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Health', url: './Expense_category.html', amount: { usd: 15 }},
+                { financials: 'Misc', url: './Expense_category.html', amount: { usd: 15 }},
+            ],
+            backgroundColor: [
+              'rgb(100, 255, 100)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 99, 132)',
+              'rgb(160, 160, 160)',
+              'rgb(255, 0, 127)',
+            ],
+            hoverOffset: 4
+          }]
+        };
+
+      const config4 = {
+          type: 'doughnut',
+          data: data4,
+          options: {
+              plugins: {
+                  legend: {
+                      display: false,
+                  }
+              },
+              parsing: {
+                 key: 'amount.usd'
+              }
+          }
+        };
+
+      const ctx4 = document.getElementById('myChart4');
+      const myChart4 = new Chart(
+        ctx4,
+        config4
+      );
+
+      function pieLink4(click){
+          const clickedInfo4 = myChart4.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+          if (clickedInfo4.length) {
+            const pieSlice4 = clickedInfo4[0];
+            console.log(pieSlice4.datasetIndex);
+            console.log(pieSlice4.index);
+            const link4 = myChart4.data.datasets[pieSlice4.datasetIndex].data[pieSlice4.index].url;
+            window.open(link4);
+          }
+      }
+      ctx4.onclick = pieLink4;
+
+      const data5 = {
+          labels: [
+            'Shopping',
+            'Food',
+            'Bills',
+            'Savings',
+            'Health',
+            'Misc'
+          ],
+          datasets: [{
+            label: 'First Pie chart',
+            data: [
+                { financials: 'Shopping', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Food', url: './Expense_category.html', amount: { usd: 30 }},
+                { financials: 'Bills', url: './Expense_category.html', amount: { usd: 20 }},
+                { financials: 'Savings', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Health', url: './Expense_category.html', amount: { usd: 15 }},
+                { financials: 'Misc', url: './Expense_category.html', amount: { usd: 15 }},
+            ],
+            backgroundColor: [
+              'rgb(100, 255, 100)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 99, 132)',
+              'rgb(160, 160, 160)',
+              'rgb(255, 0, 127)',
+            ],
+            hoverOffset: 4
+          }]
+        };
+
+      const config5 = {
+          type: 'doughnut',
+          data: data5,
+          options: {
+              plugins: {
+                  legend: {
+                      display: false,
+                  }
+              },
+              parsing: {
+                 key: 'amount.usd'
+              }
+          }
+        };
+
+      const ctx5 = document.getElementById('myChart5');
+      const myChart5 = new Chart(
+        ctx5,
+        config5
+      );
+
+      function pieLink5(click){
+          const clickedInfo5 = myChart5.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+          if (clickedInfo5.length) {
+            const pieSlice5 = clickedInfo5[0];
+            console.log(pieSlice5.datasetIndex);
+            console.log(pieSlice5.index);
+            const link5 = myChart5.data.datasets[pieSlice5.datasetIndex].data[pieSlice5.index].url;
+            window.open(link5);
+          }
+      }
+      ctx5.onclick = pieLink5;
+
+      const data6 = {
+          labels: [
+            'Shopping',
+            'Food',
+            'Bills',
+            'Savings',
+            'Health',
+            'Misc'
+          ],
+          datasets: [{
+            label: 'First Pie chart',
+            data: [
+                { financials: 'Shopping', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Food', url: './Expense_category.html', amount: { usd: 30 }},
+                { financials: 'Bills', url: './Expense_category.html', amount: { usd: 20 }},
+                { financials: 'Savings', url: './Expense_category.html', amount: { usd: 10 }},
+                { financials: 'Health', url: './Expense_category.html', amount: { usd: 15 }},
+                { financials: 'Misc', url: './Expense_category.html', amount: { usd: 15 }},
+            ],
+            backgroundColor: [
+              'rgb(100, 255, 100)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 99, 132)',
+              'rgb(160, 160, 160)',
+              'rgb(255, 0, 127)',
+            ],
+            hoverOffset: 4
+          }]
+        };
+
+      const config6 = {
+          type: 'doughnut',
+          data: data6,
+          options: {
+              plugins: {
+                  legend: {
+                      display: false,
+                  }
+              },
+              parsing: {
+                 key: 'amount.usd'
+              }
+          }
+        };
+
+      const ctx6 = document.getElementById('myChart6');
+      const myChart6 = new Chart(
+        ctx6,
+        config6
+      );
+
+      function pieLink6(click){
+          const clickedInfo6 = myChart6.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+          if (clickedInfo6.length) {
+            const pieSlice6 = clickedInfo6[0];
+            console.log(pieSlice6.datasetIndex);
+            console.log(pieSlice6.index);
+            const link6 = myChart6.data.datasets[pieSlice6.datasetIndex].data[pieSlice6.index].url;
+            window.open(link6);
+          }
+      }
+      ctx6.onclick = pieLink6;
+        </script>
+    </main>
+</body>
+</html>

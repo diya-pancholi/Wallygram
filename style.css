@@ -284,3 +284,32 @@ main .button1{
     display: flex;
     align-items: center;
 }
+.categories{
+    margin-left:470px;
+    margin-right:470px;
+}
+.chartCard{
+    margin-left:400px;
+    margin-right:400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chartBox{
+    width: 270px;
+    padding: 20px;
+}
+.month{
+    margin-left: 60px;
+}
+.button3{
+    background-color: var(--color-light);
+    border: none;
+    color:darkslategray;
+    padding: 10px 24px;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
