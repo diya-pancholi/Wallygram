@@ -83,6 +83,24 @@ table{
     height: 60px;
 }
 
+.log2{
+    font-size: 2rem;
+    text-align: center;
+}
+
+.table2{
+    border: 1px solid;
+}
+.with_border{
+    border: 1px solid;
+    text-align: center;
+    
+}
+.h_with_border{
+    border: 1px solid;
+    font-size: 2rem;
+}
+
 
 
 hr{
