@@ -331,3 +331,12 @@ main .button1{
     display: inline-block;
     font-size: 14px;
 }
+
+.add-comment
+{
+    width:640px;
+    margin-top:0px;
+    border-style:solid;
+    border-color:lightgrey;
+    padding:5px;
+}
