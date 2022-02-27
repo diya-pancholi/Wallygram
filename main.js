@@ -12,9 +12,9 @@ function accepted_friends()
     btn.style.backgroundColor="pink";
     let btnacc= document.getElementById("requested_button");
     btnacc.style.backgroundColor="var(--color-light)";
+}    
 
-    
-    function dropdownM1Function() {
+function dropdownM1Function() {
     document.getElementById("Month1").classList.toggle("show");
 }
 
