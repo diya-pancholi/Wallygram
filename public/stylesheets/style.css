@@ -1,0 +1,448 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+:root{
+    --color-light: rgb(253, 239, 244);
+    --color-dark: rgb(82, 74, 78);
+    --color-lightpink: rgb(255, 192, 211);
+    --color-darkpink: rgb(255, 92, 141);
+
+    --border-radius: 2rem;
+    --card-border-radius: 1rem;
+    --btn-padding: 0.6rem 2rem;
+    --search-padding: 0.6rem 1rem;
+    --card-padding: 1rem;
+}
+
+
+
+*,
+*::before,
+*::after{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    border: none;
+}
+
+body{
+    font-family: 'Lobster', cursive;
+    color: var(--color-dark);
+    background: var(--color-light);
+    overflow-x: hidden;
+}
+
+.container{
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+
+img{
+    display: block;
+    width: 100%;
+}
+
+main .button1 {
+    background-color: var(--color-darkpink);
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+  }
+  main .button2 {
+    background-color: var(--color-light);
+    border: none;
+    color:grey;
+    padding: 10px 24px;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+  }
+.button1:hover{
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.24), 0 5px 30px 0 rgba(0,0,0,0.19);
+}
+
+.text-bold{
+    font-weight: 500;
+}
+
+
+table{
+    margin: auto;
+    width:110%;
+    height: 60px;
+}
+
+.log2{
+    font-size: 2rem;
+    text-align: center;
+}
+
+.table2{
+    border: 1px solid;
+}
+.with_border{
+    border: 1px solid;
+    text-align: center;
+    
+}
+.h_with_border{
+    border: 1px solid;
+    font-size: 2rem;
+}
+
+
+
+hr{
+    margin:auto; 
+    border-top: 1px solid grey;
+    width: 50%;
+    
+}
+nav {
+    width: 100%;
+    background: var(--color-lightpink);
+    padding: 0.7rem ;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+}
+
+nav .Profile-picture{
+    width: 2.7rem;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+nav .container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+nav .search-bar{
+    background: var(--color-light);
+    border-radius: var(--border-radius);
+    padding: var(--search-padding);
+}
+
+nav .search-bar input[type="search"]{
+    background: transparent;
+    width: 40vw;
+    margin-left: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-dark);
+}
+
+nav .search-bar input[type="search"]::placeholder{
+    color: grey;
+}
+
+nav .home:hover{
+    font-size: 1.5rem;
+    cursor:pointer;
+}
+
+nav .friends:hover{
+    font-size: 1.5rem;
+    cursor:pointer;
+}
+
+nav .Profile:hover{
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+main{
+    position: relative;
+    top: 5.4rem;    
+}
+
+
+main .container{
+    
+    justify-content: space-evenly;    
+    display: grid;    
+}
+
+main .profile-pic{
+    margin-right:20px;
+    width: 12rem;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+main .button1{
+    background-color: none;
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+
+.app-name
+{
+    font-family: 'Cookie', cursive;
+    /* font-style:italic; */
+    font-style:bold;
+}
+
+.post-image
+{
+    height:30px;
+    width:30px;
+    border-radius:100%;
+}
+
+.my-posts
+{
+    margin-left:400px;
+    margin-right:400px;
+}
+
+
+.post-name
+{
+    font-size:16px;
+    margin-top:5px;
+    margin-left:5px;
+}
+
+
+.single-post-top
+{
+    border-style:solid;
+    border-bottom-style:dotted;
+    border-color:lightgrey;
+    padding:10px;
+    margin-top:20px;
+}
+
+.single-post-data
+{
+    border-style:solid;
+    border-color:lightgrey;
+    border-top:0px;
+    padding:10px;
+}
+
+.like-comment-button
+{
+    width:400px;
+    height:40px;
+}
+
+.like-logo
+{
+    height:20px;
+    width:20px;
+    margin-left:50px;
+}
+
+.comment-logo
+{
+    height:20px;
+    width:20px;
+    margin-left:50px;
+}
+
+.like-comment
+{
+    padding-left:5px;
+    padding-right:5px;
+    margin-left:10px;
+}
+
+.badge-in-post
+{
+    height:25px;
+    width:20px;
+    margin-right:5px;
+}
+
+.like-comment-accepted
+{
+    height: 10px;
+    width: 70px;
+    padding-left:5px;
+    padding-right:5px;
+    padding-top: 0px;
+}
+
+.crd{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 3px solid lightgray;
+    border-bottom: 3px dotted lightgray;
+    margin: 10px 0px;
+}
+
+.inner_div{
+    display: flex;
+    align-items: center;
+}
+.inner_text{
+    display: flex;
+    align-items: center;
+}
+.categories{
+    margin-left:470px;
+    margin-right:470px;
+}
+.chartCard{
+    margin-left:400px;
+    margin-right:400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chartBox{
+    width: 270px;
+    padding: 20px;
+}
+.month{
+    margin-left: 60px;
+}
+.button3{
+    background-color: var(--color-light);
+    border: none;
+    color:darkslategray;
+    padding: 10px 24px;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.add-comment
+{
+    width:640px;
+    margin-top:0px;
+    border-style:solid;
+    border-color:lightgrey;
+    padding:5px;
+}
+
+.create-post-header
+{
+    border-bottom-style:dotted;
+    border-color:lightgrey;
+    padding:10px;
+    margin-top:20px;
+    justify-self: center;
+}
+
+.create-post-title
+{
+    background-color: var(--color-light);
+    border: none;
+    color:grey;
+    padding: 10px 24px;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.form-box
+{
+    border-color:lightgrey;
+    border-top-style:dotted;
+    border-top:0px;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+.my-expenditure
+{
+    justify-content: space-evenly;
+    display: grid;
+    margin-left:50px;
+    margin-right:50px;
+}
+
+.form-title
+{
+    font-size:18px;
+    margin-top:5px;
+}
+
+.dropbtn {
+    background-color: lightgrey;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: grey;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd}
+
+.show {display:block;}
+
+.post-button-header
+{
+    border-top-style:dotted;
+    border-color:lightgrey;
+    padding:10px;
+    margin-top:20px;
+    justify-self: center;
+}
+
+.post-button-title
+{
+    background-color: var(--color-darkpink);
+    border: none;
+    color:grey;
+    padding: 10px 24px;
+    text-align: center;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
