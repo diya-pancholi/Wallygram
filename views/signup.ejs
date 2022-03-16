@@ -2,7 +2,7 @@
 
 <html>
   <head>
-    <title>Login</title>
+    <title>Sign Up</title>
   </head>
 
   <style>
@@ -11,10 +11,9 @@
       padding: 0;
     }
     body {
-      font-family: sans-serif;
       opacity: 1;
       font-family: sans-serif;
-      background-color: fuchsia;
+      background-color: darkslategrey;
       background-image: url("/public/images/bg.jpeg");
       background-repeat: no-repeat;
       background-attachment: fixed;
@@ -68,11 +67,19 @@
 
   <body>
     <div class="form-wrap">
-      <form action="/auth" method="POST" name="form2">
-        <h1>Login</h1>
-        <input type="email" placeholder="Email" name="email" />
-        <input type="password" placeholder="Password" name="pswd" id="pswd" />
-        <input type="button" value="Login" />
+      <form action="/register" method="POST" name="form1">
+        <h1>Sign Up</h1>
+        <input type="text" placeholder="Username" name="Username" id="Username" />
+        <input type="text" placeholder="Name" name="name" id="name" />
+        <input
+          type="password"
+          placeholder="Password"
+          minlength="1"
+          maxlength="8"
+          name="pswd"
+          id="pswd"
+        />
+        <input type="submit" value="Sign Up" />
       </form>
     </div>
   </body>

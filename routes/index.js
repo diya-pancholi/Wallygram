@@ -3,28 +3,33 @@ var router = express.Router();
 var session = require("express-session");
 var bodyParser = require("body-parser");
 var path = require("path");
-var app = express();
 var mysql = require("mysql");
 var crypto = require("crypto");
 
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "diyapancholi",
-  database: "users",
+  password: "Shrestaai",
+  database: "wallygramdb",
 });
 
-connection.connect();
+connection.connect(function(err) {
+  if (err) {
+    return console.error('error: ' + err.message);
+  }
+
+  console.log('Connected to the MySQL server.');
+});
 
 router.post("/register", function (req, res, next) {
   console.log(req.body);
 
   connection.query(
-    'INSERT INTO people (email, password, role) VALUES ("' +
-      req.body.email +
-      '" , "' +
+    'INSERT INTO user_table (Username,_Name,_Password) VALUES ("' +
+      req.body.Username +
+      '" , "'+req.body.name+'", "' +
       crypto.createHash("sha256").update(req.body.pswd).digest("hex") +
-      '", "user");',
+      '");',
     function (error, results, fields) {
       console.log(error);
       res.redirect("/home");
@@ -33,28 +38,28 @@ router.post("/register", function (req, res, next) {
 });
 
 router.post("/auth", function (request, response) {
-  var email = request.body.email;
+  var Username = request.body.Username;
   var pswd = crypto
     .createHash("sha256")
     .update(request.body.pswd)
     .digest("hex");
-  if (email && pswd) {
+  if (Username && pswd) {
     connection.query(
-      "SELECT * FROM people WHERE email = ? AND password = ?",
-      [email, pswd],
+      "SELECT * FROM user_table WHERE Username = ? AND _Password = ?",
+      [Username, pswd],
       function (error, results, fields) {
         if (results.length > 0) {
           request.session.loggedin = true;
           request.session.uid = results[0].id;
           response.redirect("/feed");
         } else {
-          response.send("Incorrect email and/or Pswd!");
+          response.send("Incorrect Username and/or Pswd!");
         }
         response.end();
       }
     );
   } else {
-    response.send("Please enter email and Pswd!");
+    response.send("Please enter Username and Pswd!");
     response.end();
   }
 });
@@ -63,12 +68,12 @@ router.get("/loginviaimg", function (req, res, next) {
 });
 
 router.get("/registerviaimg", function (req, res, next) {
-  res.render("signin", { title: "Express" });
+  res.render("signup",{ title: "Express" });
 });
 
 router.get("/", function (req, res, next) {
+  console.log("hi");
   res.render("index", { title: "Express" });
 });
 
-app.listen(3000);
 module.exports = router;
