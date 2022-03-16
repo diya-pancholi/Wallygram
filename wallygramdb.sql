@@ -174,6 +174,103 @@ from category
 where category_name='Food');*/
 
 
+-- CHANGES FROM HERE 
+
+
+
+-- get user info
+-- select Username, badge
+-- from user_table
+-- where Username='GYANVI';
+
+-- add like
+-- Insert into likes values(102,'GYANVI');
+
+-- add comment
+-- Insert into comments values(102,'GYANVI','Beautiful Post');
+
+-- view likes
+-- select username
+-- from likes
+-- where post_id='102';
+
+-- view comments
+-- select username, caption
+-- from comments
+-- where post_id=102;
+
+-- feed for recommendations, here Anu is the person who is logged in
+-- Select* 
+-- from payment
+-- where payment_id in (Select payment_id
+-- from category_type
+-- where Post_id in (select Post_id 
+-- from posts
+-- where Username in (Select friends_username
+-- from friends
+-- where username='Anu') order by Post_DT));
+
+
+-- feed for comparison type, first of all retrieve the current month, comparision month and category and then calculate the total expenditures in those months separately
+-- Select curr_month, Comp_month, category_id
+-- from comparison_type
+-- where Post_id in (select Post_id 
+-- from posts
+-- where Username in (Select friends_username
+-- from friends
+-- where username='Anu') order by Post_DT);
+
+-- 		-- for displaying posts of type comparision, returning the sum of expenditures of the entered months and then storing those months in the comparison table by the query metioned above
+-- 		-- example for the month of february 2022
+-- 		Select SUM(payment.Amount) as monthy_expense
+-- 		From payment,paid_by
+-- 		where payment.payment_id=paid_by.payment_id and payment.Payment_DT>'2022-02-01 12:00:00' and payment.Payment_DT<'2022-03-01 12:00:00' and paid_by.username='Gyanvi';
+
+-- 		-- for displaying monthly expense of a particular category
+-- 		Select SUM(Amount) as monthly_categorical_expense
+-- 		From Payment, paid_by
+-- 		where Payment_DT>'2022-03-01 12:00:00' and Payment_DT<'2022-04-01 12:00:00' and paid_by.username='Gyanvi' and paid_by.payment_id=payment.payment_id and
+-- 		Payment_category=(Select id 
+-- 		from category
+-- 		where category_name='Food');
+--         
+--         
+-- search user
+-- Select username, _name, badge
+-- from user_table
+-- where username='GYANVI';
+
+-- posts of a username
+-- 	-- recommendations
+--     Select* 
+-- 	from payment
+-- 	where payment_id in (Select payment_id
+-- 	from category_type
+-- 	where Post_id in (select Post_id 
+-- 	from posts
+-- 	where Username='GYANVI' order by Post_DT) );
+--     
+--     -- comparisions
+--     -- feed for comparison type, first of all retrieve the current month, comparision month and category and then calculate the total expenditures in those months separately
+-- 		Select curr_month, Comp_month, category_id
+-- 		from comparison_type
+-- 		where Post_id in (select Post_id 
+-- 		from posts
+-- 		where Username ='GYANVI' order by Post_DT);
+
+-- 				-- for displaying posts of type comparision, returning the sum of expenditures of the entered months and then storing those months in the comparison table by the query metioned above
+-- 				-- example for the month of february 2022
+-- 				Select SUM(payment.Amount) as monthy_expense
+-- 				From payment,paid_by
+-- 				where payment.payment_id=paid_by.payment_id and payment.Payment_DT>'2022-02-01 12:00:00' and payment.Payment_DT<'2022-03-01 12:00:00' and paid_by.username='Gyanvi';
+
+-- 				-- for displaying monthly expense of a particular category
+-- 				Select SUM(Amount) as monthly_categorical_expense
+-- 				From Payment, paid_by
+-- 				where Payment_DT>'2022-03-01 12:00:00' and Payment_DT<'2022-04-01 12:00:00' and paid_by.username='Gyanvi' and paid_by.payment_id=payment.payment_id and
+-- 				Payment_category=(Select id 
+-- 				from category
+-- 				where category_name='Food');
 
 
 
