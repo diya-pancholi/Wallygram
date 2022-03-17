@@ -1,5 +1,6 @@
 var createError = require("http-errors");
 var express = require("express");
+var session = require("express-session");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
@@ -21,6 +22,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+
+app.use(session({
+  secret: 'keyboard cat',
+  // resave: false,
+  // saveUninitialized: true,
+  // cookie: { secure: true }
+}))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

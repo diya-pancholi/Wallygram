@@ -1,10 +1,11 @@
 var express = require("express");
 var router = express.Router();
-var session = require("express-session");
+// var session = require("express-session");
 var bodyParser = require("body-parser");
 var path = require("path");
 var mysql = require("mysql");
 var crypto = require("crypto");
+const session = require("express-session");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -35,7 +36,7 @@ router.post("/register", function (req, res, next) {
       console.log(error);
       // request.session.loggedin = true;
       // request.session.uid = results[0].id;
-      res.redirect("/home");
+      res.redirect("/profile");
     }
   );
 });
@@ -56,9 +57,15 @@ router.post("/auth", function (request, response) {
         console.log(results);
         if (results.length > 0) {
           console.log(results, "abc");
-          // request.session.loggedin = true;
-          // request.session.uid = results[0].id;
-          response.redirect("/home");
+          // console.log(request);
+          console.log(request.session);
+          request.session = {};
+          request.session.loggedin = true;
+          request.session.uid = results[0].Username;
+          request.session.save(function () {
+            console.log(request.session);
+            response.redirect("/profile");
+          })
         } else {
           response.send("Incorrect Username and/or Pswd!");
         }
@@ -73,9 +80,11 @@ router.post("/auth", function (request, response) {
 
 router.get("/profile", function (request, response) {
   // var user = request.session.uid;
+  console.log(request.session);
+  console.log(request.session.uid);
+  console.log("abc");
   connection.query('SELECT * FROM user_table;',function (err, result){
-    // console.log(result);
-        res.render('profile', {'userinfo':result})
+        response.render('profile', {'userinfo':result})
       })
 });
 
