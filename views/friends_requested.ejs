@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--Code by Divinector - divinectorweb.com-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Friends Requested Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css"
+    />
+    <link rel="stylesheet" href="/public/stylesheets/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cookie&family=Dancing+Script:wght@700&family=Great+Vibes&family=Permanent+Marker&family=Redressed&family=Sacramento&family=Satisfy&display=swap");
+    </style>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="container">
+        <h2 class="log app-name">Wallygram</h2>
+        <div class="search-bar">
+          <i class="uil uil-search"></i>
+          <input
+            type="search"
+            placeholder="Search for your friends, inspirations and influencers"
+          />
+        </div>
+        <div class="home">
+          <i class="uil uil-house-user"></i>
+        </div>
+        <div class="friends">
+          <i class="uil uil-heart"></i>
+        </div>
+        <div class="Profile" onclick="location.href='./profile.html'">
+          <i class="uil uil-user"></i>
+        </div>
+        <div class="Profile-picture">
+          <img src="/public/images/PP1.jpg" />
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container">
+        <table>
+          <tr>
+            <td>
+              <div class="requested">
+                <button
+                  id="requested_button"
+                  style="background-color: pink"
+                  class="button2"
+                  type="button"
+                  a
+                  href="/friendsRequested"
+                >
+                  REQUESTED
+                </button>
+              </div>
+            </td>
+            <td>
+              <div class="accepted">
+                <button
+                  id="accepted_button"
+                  class="button2"
+                  type="button"
+                  a
+                  href="/friendsAccepted"
+                >
+                  ACCEPTED
+                </button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="my-posts">
+        <% for (var i =0; i < friend.length; i++ ) { %>
+        <div class="single-post">
+          <div class="single-post-top d-flex flex-row">
+            <img src="/public/images/green_badge.jpg" class="badge-in-post" />
+            <img src="/public/images/man1.jpg" class="post-image" />
+            <h3 class="post-name">
+              <i><%= friend[i].username %></i> (<%= friend[i].name %>)
+            </h3>
+          </div>
+          <div class="single-post-like-comment d-flex flex-row">
+            <button
+              class="btn btn-light like-comment-button d-flex flex-row"
+              a
+              href="/acceptFriendRequest?id=<%= friend[i].id %>"
+            >
+              <img src="/public/images/tick.jpg" class="like-logo" />
+              <p class="like-comment">Confirm</p>
+            </button>
+            <button
+              class="btn btn-light like-comment-button d-flex flex-row"
+              a
+              href="/deleteFriendRequest?id=<%= friend[i].id %>"
+            >
+              <img src="/public/images/cross.png" class="like-logo" />
+              <p class="like-comment">Delete</p>
+            </button>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </main>
+    <div class="animation-area">
+      <ul class="box-area">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+  </body>
+</html>
