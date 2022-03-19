@@ -39,13 +39,13 @@
             placeholder="Search for your friends, inspirations and influencers"
           />
         </div>
-        <div class="home">
+        <div class="home" a href="/feed">
           <i class="uil uil-house-user"></i>
         </div>
-        <div class="friends" onclick="location.href='./friends_requested.html'">
+        <div class="friends" a href="location.href='/friendsAccepted">
           <i class="uil uil-heart"></i>
         </div>
-        <div class="Profile" onclick="location.href='./profile.html'">
+        <div class="Profile" a href="/profile">
           <i class="uil uil-user"></i>
         </div>
         <div class="Profile-picture">
@@ -58,44 +58,14 @@
         <img src="/public/images/caption.PNG" />
       </div>
       <div class="chartCard">
+        <% for (var i =0; i < chart.length; i++ ) { %>
         <div class="chartBox">
           <canvas id="myChart1" class="canvasDesign"></canvas>
           <div class="month">
-            <button class="button3" type="button">MARCH 2022</button>
+            <button class="button3" type="button"><%= chart[i].month %></button>
           </div>
         </div>
-        <div class="chartBox">
-          <canvas id="myChart2"> </canvas>
-          <div class="month">
-            <button class="button3" type="button">FEBRUARY 2022</button>
-          </div>
-        </div>
-        <div class="chartBox">
-          <canvas id="myChart3"> </canvas>
-          <div class="month">
-            <button class="button3" type="button">JANUARY 2022</button>
-          </div>
-        </div>
-      </div>
-      <div class="chartCard">
-        <div class="chartBox">
-          <canvas id="myChart4" class="canvasDesign"></canvas>
-          <div class="month">
-            <button class="button3" type="button">DECEMBER 2021</button>
-          </div>
-        </div>
-        <div class="chartBox">
-          <canvas id="myChart5"> </canvas>
-          <div class="month">
-            <button class="button3" type="button">NOVEMBER 2021</button>
-          </div>
-        </div>
-        <div class="chartBox">
-          <canvas id="myChart6"> </canvas>
-          <div class="month">
-            <button class="button3" type="button">OCTOBER 2021</button>
-          </div>
-        </div>
+        <% } %>
       </div>
       <script>
         const data1 = {
