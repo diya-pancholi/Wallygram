@@ -61,13 +61,16 @@ router.post("/auth", function (request, response) {
           console.log(results, "abc");
           // console.log(request);
           console.log(request.session);
-          request.session = {};
-          request.session.loggedin = true;
-          request.session.uid = results[0].Username;
-          request.session.save(function () {
-            console.log(request.session);
-            response.redirect("/profile");
-          });
+          // request.session.save(function () {
+          //   console.log(request.session);
+          //   response.redirect("/profile");
+          // })
+          request.session.regenerate(function(err) {
+            request.session = {};
+            request.session.loggedin = true;
+            request.session.uid = results[0].Username;
+          })
+          response.redirect("/profile");
         } else {
           response.send("Incorrect Username and/or Pswd!");
         }
@@ -79,7 +82,7 @@ router.post("/auth", function (request, response) {
     response.end();
   }
 });
-
+       
 router.get("/profile", function (request, response) {
   // var user = request.session.uid;
   console.log(request.session);
