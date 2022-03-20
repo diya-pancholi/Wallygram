@@ -11,7 +11,7 @@
       rel="stylesheet"
       href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css"
     />
-    <link rel="stylesheet" href="/public/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -49,13 +49,13 @@
           <i class="uil uil-user"></i>
         </div>
         <div class="Profile-picture">
-          <img src="/public/images/PP1.jpg" />
+          <img src="/images/PP1.jpg" />
         </div>
       </div>
     </nav>
     <main>
       <div class="categories">
-        <img src="/public/images/caption.PNG" />
+        <img src="/images/caption.PNG" />
       </div>
       <div class="chartCard">
         <% for (var i =0; i < chart.length; i++ ) { %>
@@ -76,32 +76,32 @@
               data: [
                 {
                   financials: "Shopping",
-                  url: "./Expense_category.html",
+                  url: "/expenseCategory",
                   amount: { usd: 10 },
                 },
                 {
                   financials: "Food",
-                  url: "./Expense_category.html",
+                  url: "/expenseCategory",
                   amount: { usd: 30 },
                 },
                 {
                   financials: "Bills",
-                  url: "./Expense_category.html",
+                  url: "/expenseCategory",
                   amount: { usd: 20 },
                 },
                 {
                   financials: "Savings",
-                  url: "./Expense_category.html",
+                  url: "/expenseCategory",
                   amount: { usd: 10 },
                 },
                 {
                   financials: "Health",
-                  url: "./Expense_category.html",
+                  url: "/expenseCategory",
                   amount: { usd: 15 },
                 },
                 {
                   financials: "Misc",
-                  url: "./Expense_category.html",
+                  url: "/expenseCategory",
                   amount: { usd: 15 },
                 },
               ],
@@ -670,7 +670,7 @@
           <button class="button1" type="button">Post</button>
         </div>
       </div>
-      <script src="/public/javascripts/main.js"></script>
+      <script src="/javascripts/main.js"></script>
     </main>
   </body>
 </html>

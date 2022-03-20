@@ -9,7 +9,7 @@
       rel="stylesheet"
       href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css"
     />
-    <link rel="stylesheet" href="/public/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -41,7 +41,7 @@
           <i class="uil uil-user"></i>
         </div>
         <div class="Profile-picture">
-          <img src="/public/images/PP1.jpg" />
+          <img src="/images/PP1.jpg" />
         </div>
       </div>
     </nav>
@@ -65,14 +65,17 @@
         <% for (var i =0; i < post.length; i++ ) { %>
         <div class="single-post">
           <div class="single-post-top d-flex flex-row">
-            <img src="/public/images/PP1.jpg" class="post-image" />
+            <img src="/images/PP1.jpg" class="post-image" />
             <h3 class="post-name">Rachel</h3>
             <!-- set above line to username from session -->
           </div>
-          <div class="single-post-data"><b><%= post[i].category %></b></div>
+          <!-- <div class="single-post-data"><b><%= post[i].category %></b></div> -->
+          <div class="single-post-data"><b>Food</b></div>
 
           <div class="single-post-data">
-            Saved <%= post[i].percentage %> more than last month!!
+            <!-- Saved <%= post[i].percentage %> more than last month!! -->
+            <%= post[i].Caption %>
+            <!-- Saved 30 percent more than last month!! -->
           </div>
           <div class="single-post-like-comment d-flex flex-row">
             <button
@@ -86,7 +89,8 @@
               />
               <p class="like-comment">Like</p>
               <p class="like-comment likes-comments-count">
-                <%= post[i].likesCount %>
+                <!-- <%= post[i].likesCount %> -->
+                21
               </p>
             </button>
             <button
@@ -100,7 +104,8 @@
               />
               <p class="like-comment">Comment</p>
               <p class="like-comment likes-comments-count">
-                <%= post[i].commentsCount %>
+                <!-- <%= post[i].commentsCount %> -->
+                11
               </p>
             </button>
             <button
@@ -114,7 +119,8 @@
               />
               <p class="like-comment">Share</p>
               <p class="like-comment likes-comments-count">
-                <%= post[i].shareCount %>
+                <!-- <%= post[i].shareCount %> -->
+                15
               </p>
             </button>
           </div>

@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS friends_req(
     PRIMARY KEY (Username,friends_username)
 );
 
+ALTER TABLE friends_req ADD FriendName VARCHAR(256) ;
+
 
 CREATE TABLE IF NOT EXISTS category(
     id int,

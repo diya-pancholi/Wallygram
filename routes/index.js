@@ -65,11 +65,11 @@ router.post("/auth", function (request, response) {
           //   console.log(request.session);
           //   response.redirect("/profile");
           // })
-          request.session.regenerate(function(err) {
-            request.session = {};
-            request.session.loggedin = true;
-            request.session.uid = results[0].Username;
-          })
+          request.session.loggedin = true;
+          request.session.uid = results[0].Username;
+          // request.session.regenerate(function(err) {
+          //   request.session = {};
+          // })
           response.redirect("/profile");
         } else {
           response.send("Incorrect Username and/or Pswd!");
@@ -82,16 +82,51 @@ router.post("/auth", function (request, response) {
     response.end();
   }
 });
-       
+
 router.get("/profile", function (request, response) {
-  // var user = request.session.uid;
+  console.log(request.session);
+  var user = request.session.uid;
   console.log(request.session);
   console.log(request.session.uid);
   console.log("abc");
-  connection.query("SELECT * FROM user_table;", function (err, result) {
-    response.render("profile", { userinfo: result });
+  connection.query(
+    `SELECT * FROM user_table where Username = "gfg";`,
+    function (err, result) {
+      connection.query(
+        `SELECT count(Post_id) FROM posts where Username = "gfg";`,
+        function (err, result1) {
+          response.render("profile", { userinfo: result, postinfo: result1 });
+        }
+        // response.render("profile", { userinfo: result });
+      )
+    }
+  )
   });
-});
+       
+// router.get("/profile", function (request, response) {
+//   // var user = "gfg";
+//   console.log(request.session);
+//   console.log(request.session.uid);
+//   console.log("abc");
+  // connection.query("SELECT * FROM user_table where Username = 'gfg'; SELECT count(Post_id) FROM posts where Username = 'gfg'",
+  // function (err, result) {
+  //   response.render("profile", { userinfo:result[0], postinfo: result[1]});
+  // });
+  // connection.query(`SELECT count(Post_id) FROM posts where Username = "gfg";`,
+  // function (err, result1) {
+  //   response.render("profile", { postinfo: result1 });
+  // });
+  // // query 1
+  // const userinfo = connection.query('SELECT * FROM user_table where Username = "gfg";')
+
+  // // query 2
+  // const postinfo = connection.query('SELECT count(Post_id) FROM posts where Username = "gfg";')
+
+  // res.render('profile', {
+  //   userinfo,
+  //   postinfo
+  // })
+// });
 
 router.get("/home", function (req, res) {
   // connection.query(
@@ -134,7 +169,7 @@ router.get("/friendsAccepted", function (req, res, next) {
 router.get("/feed", function (req, res, next) {
   console.log("feed");
   var post = undefined;
-  connection.query(`insert select query`, function (err, result) {
+  connection.query(`SELECT * FROM posts where Username <> "gfg";`, function (err, result) {
     console.log(err);
     res.render("feed", { post: result });
   });
