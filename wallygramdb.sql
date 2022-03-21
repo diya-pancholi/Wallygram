@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS friends_req(
 );
 
 ALTER TABLE friends_req ADD FriendName VARCHAR(256) ;
+ALTER TABLE user_table ADD Bio VARCHAR(256) ;
 
 
 CREATE TABLE IF NOT EXISTS category(
@@ -87,6 +88,9 @@ CREATE TABLE IF NOT EXISTS posts(
     type enum('Comparison_Type','Category_Type') DEFAULT NULL,
     PRIMARY KEY (Post_id)
 );
+
+ALTER TABLE posts ADD LikesCount int;
+ALTER TABLE likes ADD CommentsCount int;
 
 CREATE TABLE IF NOT EXISTS Comparison_Type(
     Post_id int,

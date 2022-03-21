@@ -10,7 +10,7 @@ const session = require("express-session");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "wallygramdb",
 });
 
@@ -38,7 +38,7 @@ router.post("/register", function (req, res, next) {
       console.log(error);
       // request.session.loggedin = true;
       // request.session.uid = results[0].id;
-      res.redirect("/profile");
+      res.redirect("/auth");
     }
   );
 });
@@ -67,6 +67,7 @@ router.post("/auth", function (request, response) {
           // })
           request.session.loggedin = true;
           request.session.uid = results[0].Username;
+          console.log(request.session.uid);
           // request.session.regenerate(function(err) {
           //   request.session = {};
           // })
@@ -84,19 +85,62 @@ router.post("/auth", function (request, response) {
 });
 
 router.get("/profile", function (request, response) {
-  var user = request.session.uid;
+  // var user = request.session.uid;
+  // console.log(request.session.uid);
   connection.query(
-    `SELECT * FROM user_table where Username = "anu";`,
+    `SELECT * FROM user_table where Username = "gfg";`,
     function (err, result) {
       connection.query(
-        `SELECT count(Post_id) FROM posts where Username = "anu";`,
+        `SELECT count(Post_id) FROM posts where Username = "gfg";`,
         function (err, result1) {
           connection.query(
-            `SELECT * FROM posts where Username = "anu";`,
+            `SELECT * FROM posts where Username = "gfg";`,
             function (err, result2) {
               response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2 });
             }           
           )
+        }
+      )
+    }
+  )
+});
+
+router.get("/like", function (request, response) {
+  console.log(request.query.id);
+  connection.query(
+    `UPDATE posts SET LikesCount = LikesCount + 1 WHERE Post_id= ${request.query.id};`, 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log('Rows affected:', result.affectedRows);
+      response.redirect('/profile');
+    }
+  )
+});
+
+router.get("/comment", function (request, response) {
+  console.log(request.query.id);
+  connection.query(
+    `UPDATE posts SET CommentsCount = CommentsCount + 1 WHERE Post_id= ${request.query.id};`, 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log('Rows affected:', result.affectedRows);
+      console.log(request.body);
+      console.log(request.body.comment);
+      connection.query(
+        'INSERT INTO comments (post_id,username,Caption) VALUES ("' +
+        request.query.id +
+        '" , "' +
+        "yy" +
+        '", "' +
+        request.body.comment +
+        '");',
+        function (error, results, fields) {
+          console.log(error);
+          response.redirect("/profile");
         }
       )
     }

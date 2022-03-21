@@ -96,7 +96,7 @@
                                 <tr>
                                     <td>
                                         <div class="caption">
-                                            I am <%= userinfo[0]._Name %>. I live in Canada.
+                                            <%= userinfo[0].Bio %>
                                         </div>
                                     </td>
                                 </tr>
@@ -139,15 +139,15 @@
             </div>
             <div class="single-post-data"><%= postinfo[i].Caption %></div>         
             <div class="single-post-like-comment d-flex flex-row">
-                <button class="btn btn-light like-comment-button d-flex flex-row">
+                <button class="btn btn-light like-comment-button d-flex flex-row" onclick="location.href='/like?id=<%= postinfo[i].Post_id %>'">
                     <img src="/images/like-logo.png" class="like-logo">
                     <p class="like-comment">Like</p>
-                    <p class="like-comment likes-comments-count">52</p>
+                    <p class="like-comment likes-comments-count"><%= postinfo[i].LikesCount %></p>
                 </button>
                 <button class="btn btn-light like-comment-button d-flex flex-row">
                     <img src="/images/comment-logo.jpg" class="comment-logo">
                     <p class="like-comment">Comment</p>
-                    <p class="like-comment likes-comments-count">12</p>
+                    <p class="like-comment likes-comments-count"><%= postinfo[i].CommentsCount %></p>
                 </button>
                 <button class="btn btn-light like-comment-button d-flex flex-row">
                     <img src="/images/share-logo.png" class="comment-logo">
@@ -156,11 +156,11 @@
                 </button>
             </div>
             <div class="d-flex flex-row">
-                <form>
-                    <input class="add-comment" type="text" placeholder="Add comment....">
+                <form action="/comment" method="POST" name="form3">
+                    <input class="add-comment" type="text" placeholder="Add comment...." name="comment" id="comment"/>
                 </form>
                 <div class="inner_button">
-                  <button class="btn btn-outline-danger">Comment</button>
+                  <input type="submit" class="btn btn-outline-danger" onclick="location.href='/comment?id=<%= postinfo[i].Post_id %>'" value = "Comment"/>
                 </div>
             </div>
         </div>
