@@ -150,7 +150,7 @@ router.get("/comment", function (request, response) {
 router.get("/friendsRequested", function (req, res, next) {
   console.log("friendsRequested");
   var friend = undefined;
-  connection.query(`insert select query`, function (err, result) {
+  connection.query(`SELECT * from friends_req WHERE Username = "gfg"`, function (err, result) {
     console.log(err);
     res.render("friends_requested", { friend: result });
   });
@@ -191,27 +191,27 @@ router.get("/", function (req, res, next) {
   console.log("hi");
   res.render("index", { title: "Express" });
 });
-router.get("/like", function (req, res, next) {
-  console.log("like");
-  connection.query(`set update query`, (error, results, fields) => {
-    if (error) {
-      return console.error(error.message);
-    }
-    console.log("Rows affected:", results.affectedRows);
-    res.redirect("feed", { title: "Express" });
-  });
-});
+// router.get("/like", function (req, res, next) {
+//   console.log("like");
+//   connection.query(`set update query`, (error, results, fields) => {
+//     if (error) {
+//       return console.error(error.message);
+//     }
+//     console.log("Rows affected:", results.affectedRows);
+//     res.redirect("feed", { title: "Express" });
+//   });
+// });
 // am confused about sending comment body
-router.get("/comment", function (req, res, next) {
-  console.log("comment");
-  connection.query(`set insert query`, (error, results, fields) => {
-    if (error) {
-      return console.error(error.message);
-    }
-    console.log("Rows affected:", results.affectedRows);
-    res.redirect("feed", { title: "Express" });
-  });
-});
+// router.get("/comment", function (req, res, next) {
+//   console.log("comment");
+//   connection.query(`set insert query`, (error, results, fields) => {
+//     if (error) {
+//       return console.error(error.message);
+//     }
+//     console.log("Rows affected:", results.affectedRows);
+//     res.redirect("feed", { title: "Express" });
+//   });
+// });
 router.get("/share", function (req, res, next) {
   console.log("share");
   connection.query(`set insert query`, (error, results, fields) => {
@@ -233,13 +233,23 @@ router.get("/removeFriend", function (req, res, next) {
   });
 });
 router.get("/acceptFriendRequest", function (req, res, next) {
-  console.log("acceptFriendRequest");
-  connection.query(`set query`, (error, results, fields) => {
+  // console.log("req.query.id");
+  connection.query('INSERT INTO friends (Username,FriendID) VALUES ("' +
+  "gfg" +
+  '" , "' +
+  req.query.id +
+  '");', function (error, result) {
     if (error) {
       return console.error(error.message);
     }
     console.log("Rows affected:", results.affectedRows);
-    res.redirect("/friendsRequestedted");
+    connection.query(`DELETE FROM friends_req WHERE Username = "gfg" and FriendID = ${req.query.id};`, function (error, result) {
+      if (error) {
+        return console.error(error.message);
+      }
+      console.log("Rows affected:", results.affectedRows);
+      res.redirect("/friendsRequested");
+    })
   });
 });
 router.get("/deleteFriendRequest", function (req, res, next) {
