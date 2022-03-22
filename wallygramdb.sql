@@ -36,9 +36,12 @@ CREATE TABLE IF NOT EXISTS friends_req(
     FOREIGN KEY (friends_username) REFERENCES user_table(Username) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (Username,friends_username)
 );
+ALTER TABLE friends_req ADD FriendID int;
+ALTER TABLE friends ADD FriendID int;
 
 ALTER TABLE friends_req ADD FriendName VARCHAR(256) ;
 ALTER TABLE user_table ADD Bio VARCHAR(256) ;
+ALTER TABLE user_table ADD ID int ;
 
 
 CREATE TABLE IF NOT EXISTS category(
@@ -90,7 +93,7 @@ CREATE TABLE IF NOT EXISTS posts(
 );
 
 ALTER TABLE posts ADD LikesCount int;
-ALTER TABLE likes ADD CommentsCount int;
+ALTER TABLE posts ADD CommentsCount int;
 
 CREATE TABLE IF NOT EXISTS Comparison_Type(
     Post_id int,
