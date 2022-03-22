@@ -10,7 +10,7 @@ const session = require("express-session");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "root",
   database: "wallygramdb",
 });
 
@@ -119,6 +119,20 @@ router.get("/like", function (request, response) {
   )
 });
 
+router.get("/likefeed", function (request, response) {
+  console.log(request.query.id);
+  connection.query(
+    `UPDATE posts SET LikesCount = LikesCount + 1 WHERE Post_id= ${request.query.id};`, 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log('Rows affected:', result.affectedRows);
+      response.redirect('/feed');
+    }
+  )
+});
+
 router.get("/comment", function (request, response) {
   console.log(request.query.id);
   connection.query(
@@ -164,11 +178,13 @@ router.get("/friendsAccepted", function (req, res, next) {
     res.render("friends_accepted", { friend: result });
   });
 });
+
 router.get("/feed", function (req, res, next) {
   console.log("feed");
   var post = undefined;
   connection.query(`SELECT * FROM posts where Username <> "gfg";`, function (err, result) {
     console.log(err);
+    console.log(result);
     res.render("feed", { post: result });
   });
 });
