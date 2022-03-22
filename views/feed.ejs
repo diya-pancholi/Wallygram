@@ -64,69 +64,40 @@
       <div class="my-posts">
         <% for (var i =0; i < post.length; i++ ) { %>
         <div class="single-post">
-          <div class="single-post-top d-flex flex-row">
-            <img src="/images/PP1.jpg" class="post-image" />
-            <h3 class="post-name">Rachel</h3>
-            <!-- set above line to username from session -->
-          </div>
-          <!-- <div class="single-post-data"><b><%= post[i].category %></b></div> -->
-          <div class="single-post-data"><b>Food</b></div>
-
-          <div class="single-post-data">
-            <!-- Saved <%= post[i].percentage %> more than last month!! -->
-            <%= post[i].Caption %>
-            <!-- Saved 30 percent more than last month!! -->
-          </div>
-          <div class="single-post-like-comment d-flex flex-row">
-            <button
-              class="btn btn-light like-comment-button d-flex flex-row"
-              a
-              href="/like?id=<%= post[i].id %>"
-            >
-              <img
-                src="https://cdn.freelogovectors.net/wp-content/uploads/2016/12/facebook-like-logo.png"
-                class="like-logo"
-              />
-              <p class="like-comment">Like</p>
-              <p class="like-comment likes-comments-count">
-                <!-- <%= post[i].likesCount %> -->
-                21
-              </p>
-            </button>
-            <button
-              class="btn btn-light like-comment-button d-flex flex-row"
-              a
-              href="/comment?id=<%= post[i].id %>"
-            >
-              <img
-                src="https://th.bing.com/th/id/OIP.un1SytSBdEiM8dQ0u5KbygHaHa?pid=ImgDet&rs=1"
-                class="comment-logo"
-              />
-              <p class="like-comment">Comment</p>
-              <p class="like-comment likes-comments-count">
-                <!-- <%= post[i].commentsCount %> -->
-                11
-              </p>
-            </button>
-            <button
-              class="btn btn-light like-comment-button d-flex flex-row"
-              a
-              href="/share?id=<%= post[i].id %>"
-            >
-              <img
-                src="https://www.kindpng.com/picc/m/11-116705_logo-share-facebook-facebook-share-logo-hd-png.png"
-                class="comment-logo"
-              />
-              <p class="like-comment">Share</p>
-              <p class="like-comment likes-comments-count">
-                <!-- <%= post[i].shareCount %> -->
-                15
-              </p>
-            </button>
-          </div>
+            <div class="single-post-top d-flex flex-row">
+                <img src="/images/green_badge.jpg" class="badge-in-post">
+                <img src="/images/PP1.jpg" class="post-image">
+                <h3 class="post-name"><%= post[i].Username %></h3>
+            </div>
+            <div class="single-post-data"><%= post[i].Caption %></div>         
+            <div class="single-post-like-comment d-flex flex-row">
+                <button class="btn btn-light like-comment-button d-flex flex-row" onclick="location.href='/like?id=<%= post[i].Post_id %>'">
+                    <img src="/images/like-logo.png" class="like-logo">
+                    <p class="like-comment">Like</p>
+                    <p class="like-comment likes-comments-count"><%= post[i].LikesCount %></p>
+                </button>
+                <button class="btn btn-light like-comment-button d-flex flex-row">
+                    <img src="/images/comment-logo.jpg" class="comment-logo">
+                    <p class="like-comment">Comment</p>
+                    <p class="like-comment likes-comments-count"><%= post[i].CommentsCount %></p>
+                </button>
+                <button class="btn btn-light like-comment-button d-flex flex-row">
+                    <img src="/images/share-logo.png" class="comment-logo">
+                    <p class="like-comment">Share</p>
+                    <p class="like-comment likes-comments-count">2</p>
+                </button>
+            </div>
+            <div class="d-flex flex-row">
+                <form action="/comment" method="POST" name="form3">
+                    <input class="add-comment-feed" type="text" placeholder="Add comment...." name="comment" id="comment"/>
+                </form>
+                <div class="inner_button">
+                  <input type="submit" class="btn btn-outline-danger" onclick="location.href='/comment?id=<%= post[i].Post_id %>'" value = "Comment"/>
+                </div>
+            </div>
         </div>
         <% } %>
-      </div>
+    </div>
     </main>
   </body>
 </html>
