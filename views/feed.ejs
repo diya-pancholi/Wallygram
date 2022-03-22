@@ -71,7 +71,7 @@
             </div>
             <div class="single-post-data"><%= post[i].Caption %></div>         
             <div class="single-post-like-comment d-flex flex-row">
-                <button class="btn btn-light like-comment-button d-flex flex-row" onclick="location.href='/like?id=<%= post[i].Post_id %>'">
+                <button class="btn btn-light like-comment-button d-flex flex-row" onclick="location.href='/likefeed?id=<%= post[i].Post_id %>'">
                     <img src="/images/like-logo.png" class="like-logo">
                     <p class="like-comment">Like</p>
                     <p class="like-comment likes-comments-count"><%= post[i].LikesCount %></p>
