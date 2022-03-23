@@ -96,7 +96,13 @@ router.get("/profile", function (request, response) {
           connection.query(
             `SELECT * FROM posts where Username = "gfg";`,
             function (err, result2) {
-              response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2 });
+              connection.query(
+                `SELECT * FROM comments WHERE Post_id IN (SELECT Post_id FROM posts where Username = "gfg") ;`,
+                function (err, result3) {
+                  console.log(result3);
+                  response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3 });
+                }           
+              )
             }           
           )
         }
@@ -210,10 +216,14 @@ router.get("/friendsAccepted", function (req, res, next) {
 router.get("/feed", function (req, res, next) {
   console.log("feed");
   var post = undefined;
-  connection.query(`SELECT * FROM posts where Username <> "gfg";`, function (err, result) {
-    console.log(err);
-    console.log(result);
-    res.render("feed", { post: result });
+  connection.query(
+    `SELECT * FROM posts where Username <> "gfg";`, function (err, result) {
+      connection.query(
+        `SELECT * FROM comments;`, function (err, result1) {
+        console.log(err);
+        console.log(result1);
+        res.render("feed", { post: result, comments: result1 });
+      });
   });
 });
 
@@ -235,27 +245,7 @@ router.get("/", function (req, res, next) {
   console.log("hi");
   res.render("index", { title: "Express" });
 });
-// router.get("/like", function (req, res, next) {
-//   console.log("like");
-//   connection.query(`set update query`, (error, results, fields) => {
-//     if (error) {
-//       return console.error(error.message);
-//     }
-//     console.log("Rows affected:", results.affectedRows);
-//     res.redirect("feed", { title: "Express" });
-//   });
-// });
-// am confused about sending comment body
-// router.get("/comment", function (req, res, next) {
-//   console.log("comment");
-//   connection.query(`set insert query`, (error, results, fields) => {
-//     if (error) {
-//       return console.error(error.message);
-//     }
-//     console.log("Rows affected:", results.affectedRows);
-//     res.redirect("feed", { title: "Express" });
-//   });
-// });
+
 router.get("/share", function (req, res, next) {
   console.log("share");
   connection.query(`set insert query`, (error, results, fields) => {
@@ -266,6 +256,7 @@ router.get("/share", function (req, res, next) {
     res.redirect("profile", { title: "Express" });
   });
 });
+
 router.get("/removeFriend", function (req, res, next) {
   console.log("removeFriend");
   connection.query(`set query`, (error, results, fields) => {
