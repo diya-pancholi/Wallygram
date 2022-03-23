@@ -133,10 +133,10 @@ router.get("/likefeed", function (request, response) {
   )
 });
 
-router.get("/comment", function (request, response) {
-  console.log(request.query.id);
+router.post("/comment", function (request, response, next) {
+  console.log(request.body);
   connection.query(
-    `UPDATE posts SET CommentsCount = CommentsCount + 1 WHERE Post_id= ${request.query.id};`, 
+    `UPDATE posts SET CommentsCount = CommentsCount + 1 WHERE Post_id= ${request.body.postid};`, 
     function (err, result) {
       if (err){
         return console.log(err);
@@ -146,15 +146,43 @@ router.get("/comment", function (request, response) {
       console.log(request.body.comment);
       connection.query(
         'INSERT INTO comments (post_id,username,Caption) VALUES ("' +
-        request.query.id +
+        request.body.postid +
         '" , "' +
-        "yy" +
+        "anu" +
         '", "' +
         request.body.comment +
         '");',
         function (error, results, fields) {
           console.log(error);
           response.redirect("/profile");
+        }
+      )
+    }
+  )
+});
+
+router.post("/commentfeed", function (request, response, next) {
+  console.log(request.body);
+  connection.query(
+    `UPDATE posts SET CommentsCount = CommentsCount + 1 WHERE Post_id= ${request.body.postid};`, 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log('Rows affected:', result.affectedRows);
+      console.log(request.body);
+      console.log(request.body.comment);
+      connection.query(
+        'INSERT INTO comments (post_id,username,Caption) VALUES ("' +
+        request.body.postid +
+        '" , "' +
+        "gfg" +
+        '", "' +
+        request.body.comment +
+        '");',
+        function (error, results, fields) {
+          console.log(error);
+          response.redirect("/feed");
         }
       )
     }
