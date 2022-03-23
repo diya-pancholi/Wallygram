@@ -101,7 +101,39 @@ table{
     font-size: 2rem;
 }
 
+.name{
+    text-align:center;
+    font-size: 2.2rem;
+}
 
+.logimg{
+    height:75px;
+    width:75px;
+    padding: 10px;
+    margin-left: 100px;
+}
+
+.logsign {
+    width: 320px;
+    background: var(--color-lightpink);
+    border: 2px solid;
+    border-color: lightgrey;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+.login{
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.register{
+    font-size: 2.5rem;
+    text-align: center;
+}
 
 hr{
     margin:auto; 
