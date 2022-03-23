@@ -156,12 +156,13 @@
                 </button>
             </div>
             <div class="d-flex flex-row">
-                <form action="/comment" method="POST" name="form3">
-                    <input class="add-comment" type="text" placeholder="Add comment...." name="comment" id="comment"/>
-                </form>
-                <div class="inner_button">
-                  <input type="submit" class="btn btn-outline-danger" onclick="location.href='/comment?id=<%= postinfo[i].Post_id %>'" value = "Comment"/>
-                </div>
+                <form action="/comment" method="POST" name="form3" class="d-flex flex-row">
+                    <input class="add-comment" type="text" placeholder= "Add comment...." name="comment" id="comment"/>
+                    <input type="hidden" name="postid" value = "<%= postinfo[i].Post_id %>"/>
+                    <div class="inner_button">
+                        <input type="submit" class="btn btn-outline-danger" value = "Comment"/>
+                    </div>
+                </form>    
             </div>
         </div>
         <% } %>
