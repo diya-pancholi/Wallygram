@@ -254,6 +254,23 @@ main .button1{
     margin-left:5px;
 }
 
+.comment-username
+{
+    font-size:16px;
+    margin-bottom:2px;
+    margin-left:0px;
+    margin-right: 25px;
+}
+
+.comment-body
+{
+    font-size:14px;
+    margin-top: 2px;
+    margin-bottom:2px;
+    margin-left:0px;
+    margin-right: 15px;
+}
+
 
 .single-post-top
 {
@@ -269,6 +286,13 @@ main .button1{
     border-style:solid;
     border-color:lightgrey;
     border-top:0px;
+    padding:10px;
+}
+
+.single-comment-data
+{
+    border-style:solid;
+    border-color:lightgrey;
     padding:10px;
 }
 
