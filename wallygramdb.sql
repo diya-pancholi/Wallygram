@@ -20,7 +20,6 @@ where Username='GYANVI';*/
 FROM user_table
 where Username='GYANVI' and _Password='idk';*/
 
-
 CREATE TABLE IF NOT EXISTS friends(
     Username varchar(255),
     friends_username varchar(255),

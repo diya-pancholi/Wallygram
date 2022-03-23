@@ -63,9 +63,7 @@
                   id="requested_button"
                   class="button2"
                   type="button"
-                  a
-                  href="/friendsRequested"
-                  onclick="requested_friends()"
+                  onclick="location.href='/friendsRequested'"
                 >
                   REQUESTED
                 </button>
@@ -78,9 +76,7 @@
                   style="background-color: pink"
                   class="button2"
                   type="button"
-                  a
-                  href="/friendsAccepted"
-                  onclick="accepted_friends()"
+                  onclick="location.href='/friendsAccepted'"
                 >
                   ACCEPTED
                 </button>
@@ -94,19 +90,18 @@
         <div class="single-post">
           <section class="crd">
             <div class="inner_div">
-              <img src="/public/images/red_badge.jpg" class="badge-in-post" />
+              <img src="/images/red_badge.jpg" class="badge-in-post" />
               <div class="inner_text">
-                <img src="/public/images/man3.jpg" class="post-image" />
+                <img src="/images/man3.jpg" class="post-image" />
                 <h3 class="post-name">
-                  <i><%= friend[i].username %></i> (<%= friend[i].name %>)
+                  <i><%= friend[i].friends_username %></i>
                 </h3>
               </div>
             </div>
             <div class="inner_button">
               <button
                 class="btn btn-outline-danger"
-                a
-                href="/removeFriend?id=<%= friend[i].id %>"
+                onclick="location.href='/removeFriend?id=<%= friend[i].friends_username %>'"
               >
                 Remove
               </button>

@@ -10,7 +10,7 @@ const session = require("express-session");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "wallygramdb",
 });
 
@@ -207,7 +207,7 @@ router.get("/friendsRequested", function (req, res, next) {
 router.get("/friendsAccepted", function (req, res, next) {
   console.log("friendsAccepted");
   var friend = undefined;
-  connection.query(`insert select query`, function (err, result) {
+  connection.query(`SELECT * from friends WHERE Username = "gfg"`, function (err, result) {
     console.log(err);
     res.render("friends_accepted", { friend: result });
   });
@@ -258,18 +258,18 @@ router.get("/share", function (req, res, next) {
 });
 
 router.get("/removeFriend", function (req, res, next) {
-  console.log("removeFriend");
-  connection.query(`set query`, (error, results, fields) => {
+  console.log(req.query.id);
+  connection.query(`DELETE FROM friends WHERE Username = "gfg" and friends_username = "${req.query.id}";`, function (error, result) {
     if (error) {
       return console.error(error.message);
     }
-    console.log("Rows affected:", results.affectedRows);
+    console.log("Rows affected:", result.affectedRows);
     res.redirect("/friendsAccepted");
-  });
+  })
 });
 router.get("/acceptFriendRequest", function (req, res, next) {
-  // console.log("req.query.id");
-  connection.query('INSERT INTO friends (Username,FriendID) VALUES ("' +
+  console.log(req.query.id);
+  connection.query('INSERT INTO friends (Username, friends_username) VALUES ("' +
   "gfg" +
   '" , "' +
   req.query.id +
@@ -277,25 +277,25 @@ router.get("/acceptFriendRequest", function (req, res, next) {
     if (error) {
       return console.error(error.message);
     }
-    console.log("Rows affected:", results.affectedRows);
-    connection.query(`DELETE FROM friends_req WHERE Username = "gfg" and FriendID = ${req.query.id};`, function (error, result) {
+    console.log("Rows affected:", result.affectedRows);
+    connection.query(`DELETE FROM friends_req WHERE Username = "gfg" and friends_username = "${req.query.id}";`, function (error, result) {
       if (error) {
         return console.error(error.message);
       }
-      console.log("Rows affected:", results.affectedRows);
+      console.log("Rows affected:", result.affectedRows);
       res.redirect("/friendsRequested");
     })
   });
 });
 router.get("/deleteFriendRequest", function (req, res, next) {
-  console.log("deleteFriendRequest");
-  connection.query(`set query`, (error, results, fields) => {
+  console.log(req.query.id);
+  connection.query(`DELETE FROM friends_req WHERE Username = "gfg" and friends_username = "${req.query.id}";`, function (error, result) {
     if (error) {
       return console.error(error.message);
     }
-    console.log("Rows affected:", results.affectedRows);
+    console.log("Rows affected:", result.affectedRows);
     res.redirect("/friendsRequested");
-  });
+  })
 });
 
 module.exports = router;
