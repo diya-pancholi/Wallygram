@@ -409,8 +409,10 @@ main .button1{
 {
     border-bottom-style:dotted;
     border-color:lightgrey;
-    padding:10px;
     margin-top:20px;
+    margin-top: 50px;
+    margin-left: 10px;
+    margin-right: 10px;
     justify-self: center;
 }
 
@@ -453,9 +455,10 @@ main .button1{
 .dropbtn {
     background-color: lightgrey;
     color: white;
-    padding: 10px 24px;
+    padding: 8px 20px;
+    margin:5px;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 14px;
     border: none;
     cursor: pointer;
 }
@@ -495,6 +498,8 @@ main .button1{
     border-color:lightgrey;
     padding:10px;
     margin-top:20px;
+    margin-left: 220px;
+    margin-right: 220px;
     justify-self: center;
 }
 
@@ -509,4 +514,22 @@ main .button1{
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+}
+
+.camparison-option-row{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.add-caption
+{
+    width:368px;
+    margin: 10px;
+    margin-left: 80px;
+    margin-right: 80px;
+    border-style:solid;
+    border-color:lightgrey;
+    padding:5px;
 }
