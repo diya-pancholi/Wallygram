@@ -10,7 +10,7 @@ const session = require("express-session");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "root",
   database: "wallygramdb",
 });
 
@@ -232,11 +232,25 @@ router.get("/loginviaimg", function (req, res, next) {
 });
 
 router.get("/expenseCategory", function (req, res, next) {
+  console.log(console.error());
   res.render("expense_category", { title: "Express" });
 });
+
 router.get("/expenditure", function (req, res, next) {
-  res.render("expenditure", { title: "Express" });
+  connection.query(
+    `SELECT * FROM user_table where Username = "gfg";`,
+    function (err, result) {
+      connection.query(
+        `SELECT count(Post_id) FROM posts where Username = "gfg";`,
+        function (err, result1) {
+              console.log(result1);
+              res.render("expenditure", {userinfo : result, postcountinfo:result1});
+            }
+          )
+        }
+      )
 });
+
 router.get("/registerviaimg", function (req, res, next) {
   res.render("signup", { title: "Express" });
 });
@@ -267,6 +281,7 @@ router.get("/removeFriend", function (req, res, next) {
     res.redirect("/friendsAccepted");
   })
 });
+
 router.get("/acceptFriendRequest", function (req, res, next) {
   console.log(req.query.id);
   connection.query('INSERT INTO friends (Username, friends_username) VALUES ("' +
@@ -296,6 +311,34 @@ router.get("/deleteFriendRequest", function (req, res, next) {
     console.log("Rows affected:", result.affectedRows);
     res.redirect("/friendsRequested");
   })
+});
+
+router.post("/comparisonpost", function (request, response, next) {
+  console.log(request.body);
+  connection.query(
+    'INSERT INTO posts (post_id,username,Caption) VALUES ("' +
+    "1114" +
+    '" , "' +
+    "gfg" +
+    '", "' +
+    request.body.caption +
+    '");',
+    function (error, results, fields) {
+      connection.query(
+        'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month) VALUES ("' +
+        "1114" +
+        '" , "' +
+        request.body.month1 +
+        '", "' +
+        request.body.month2 +
+        '");',
+        function (error, results, fields) {
+          console.log(error);
+          response.redirect("/expenditure");
+        }
+      )
+    }
+  )
 });
 
 module.exports = router;
