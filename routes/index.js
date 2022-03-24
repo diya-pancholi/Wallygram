@@ -191,6 +191,52 @@ router.get("/", function (req, res, next) {
   console.log("hi");
   res.render("index", { title: "Express" });
 });
+// INSERT INTO user_table (Username,_Name,_Password) VALUES ("' +
+//       req.body.Username +
+//       '" , "' +
+//       req.body.name +
+//       '", "' +
+//       req.body.pswd +
+//       '");
+router.get("/createPost2",function(req,res,next){
+  console.log("createPost2");
+  var post=undefined;
+  // if(req.body.Caption!= "")
+  // { 
+    connection.query('Insert into posts(Post_id,Caption,Username,Post_DT,type) values('+100+', "'+req.body.Caption+'","'+req.body.Username+'","'+CURRENT_TIME()+'","'+Comparison_Type+'");',function (error, results, fields) {
+    console.log(error);
+     });
+    // }
+    
+    // else{
+    //   connection.query('Insert into posts(Post_id,Caption,Username,Post_DT,type) values('100+', "'+ req.body.Caption+'","'+req.body.Username+'","'+2021-11-12 09:23:45+'","'Comparison_Type'");',function (error, results, fields) {
+    //     console.log(error);
+    //   });
+    // }
+    // press ctrl & ~. in terminal, 1. git branch: just to check ki tu konsi branch pe hai currently
+    //2. git checkout -b sahithidev: to make new branch
+    //3. git add .
+    //4. git commit -m "work in progress"
+    //5. git push -u origin sahithidev
+    //iske baad go to github of wallygram, and refresh. you will see a message on top that sahithi pushed changes a minute ago, press create pull request wala green button.
+  connection.query('Insert into Comparison_Type(Post_ID,Comp_month,Curr_month,category_id) values('+101+',"'+'"December"'+'","'+'"January"'+'","'+201);')
+  connection.query(
+    `SELECT * FROM user_table where Username = "gfg";`,
+    function (err, result) {
+      connection.query(
+        `SELECT count(Post_id) FROM posts where Username = "gfg";`,
+        function (err, result1) {
+          connection.query(
+            `SELECT * FROM posts where Username = "gfg";`,
+            function (err, result2) {
+              response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2 });
+            }           
+          )
+        }
+      )
+    }
+  ) 
+})
 // router.get("/like", function (req, res, next) {
 //   console.log("like");
 //   connection.query(`set update query`, (error, results, fields) => {
