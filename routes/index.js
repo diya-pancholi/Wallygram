@@ -94,13 +94,18 @@ router.get("/profile", function (request, response) {
         `SELECT count(Post_id) FROM posts where Username = "gfg";`,
         function (err, result1) {
           connection.query(
-            `SELECT * FROM posts where Username = "gfg";`,
+            `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "gfg";`,
             function (err, result2) {
               connection.query(
                 `SELECT * FROM comments WHERE Post_id IN (SELECT Post_id FROM posts where Username = "gfg") ;`,
                 function (err, result3) {
-                  console.log(result3);
-                  response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3 });
+                  connection.query(
+                    `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "gfg";`,
+                    function (err, result4) {
+                      console.log(result3);
+                      response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3, catpostinfo : result4 });
+                    }           
+                  )
                 }           
               )
             }           
@@ -217,12 +222,15 @@ router.get("/feed", function (req, res, next) {
   console.log("feed");
   var post = undefined;
   connection.query(
-    `SELECT * FROM posts where Username <> "gfg";`, function (err, result) {
+    `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username <> "gfg";`, function (err, result) {
       connection.query(
         `SELECT * FROM comments;`, function (err, result1) {
-        console.log(err);
-        console.log(result1);
-        res.render("feed", { post: result, comments: result1 });
+          connection.query(
+            `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "gfg";`,
+            function (err, result2) {
+              res.render("feed", { post: result, comments: result1, catpost : result2 });
+            }           
+          )
       });
   });
 });
@@ -302,6 +310,7 @@ router.get("/acceptFriendRequest", function (req, res, next) {
     })
   });
 });
+
 router.get("/deleteFriendRequest", function (req, res, next) {
   console.log(req.query.id);
   connection.query(`DELETE FROM friends_req WHERE Username = "gfg" and friends_username = "${req.query.id}";`, function (error, result) {
@@ -314,30 +323,69 @@ router.get("/deleteFriendRequest", function (req, res, next) {
 });
 
 router.post("/comparisonpost", function (request, response, next) {
-  console.log(request.body);
   postid = 0
   connection.query(
     'SELECT count(Post_id) FROM posts;',
     function (error, resultcount, fields) {
-      console.log(resultcount);
       postid = resultcount[0]['count(Post_id)'] + 1;
-      console.log(postid);
       connection.query(
-        'INSERT INTO posts (post_id,username,Caption) VALUES ("' +
+        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
         postid +
         '" , "' +
         "gfg" +
         '", "' +
         request.body.caption +
+        '", "' +
+        0 + 
+        '", "' +
+        0 +
         '");',
         function (error, results, fields) {
           connection.query(
-            'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month) VALUES ("' +
+            'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month, Category) VALUES ("' +
             postid +
             '" , "' +
             request.body.month1 +
             '", "' +
             request.body.month2 +
+            '", "' +
+            request.body.Category +
+            '");',
+            function (error, results, fields) {
+              console.log(error);
+              response.redirect("/expenditure");
+            }
+          )
+        }
+      )
+    }
+  )
+});
+
+router.post("/categorypost", function (request, response, next) {
+  postid = 0
+  connection.query(
+    'SELECT count(Post_id) FROM posts;',
+    function (error, resultcount, fields) {
+      postid = resultcount[0]['count(Post_id)'] + 1;
+      connection.query(
+        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
+        postid +
+        '" , "' +
+        "gfg" +
+        '", "' +
+        request.body.caption +
+        '", "' +
+        0 + 
+        '", "' +
+        0 +
+        '");',
+        function (error, results, fields) {
+          connection.query(
+            'INSERT INTO Category_Type (Post_id, Category) VALUES ("' +
+            postid +
+            '" , "' +
+            request.body.Category +
             '");',
             function (error, results, fields) {
               console.log(error);
