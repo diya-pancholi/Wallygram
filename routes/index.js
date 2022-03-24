@@ -61,21 +61,22 @@ router.post("/auth", function (request, response) {
           console.log(results, "abc");
           // console.log(request);
           console.log(request.session);
-          // request.session.save(function () {
-          //   console.log(request.session);
-          //   response.redirect("/profile");
-          // })
+          
           request.session.loggedin = true;
           request.session.uid = results[0].Username;
           console.log(request.session.uid);
           // request.session.regenerate(function(err) {
           //   request.session = {};
           // })
-          response.redirect("/profile");
+          request.session.save(function (err) {
+            console.log(request.session);
+            response.redirect("/profile");
+          })
+          // response.redirect("/profile");
         } else {
           response.send("Incorrect Username and/or Pswd!");
         }
-        response.end();
+        // response.end();
       }
     );
   } else {
@@ -85,11 +86,16 @@ router.post("/auth", function (request, response) {
 });
 
 router.get("/profile", function (request, response) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+  var user = request.session.uid;
+  console.log("profile-request.session");
+  console.log(request.session);
+  console.log(request.session.uid);
   connection.query(
-    `SELECT * FROM user_table where Username = "gfg";`,
+    `SELECT * FROM user_table where Username = ?;`, [user],
     function (err, result) {
+      if (err) {
+        console.error(err);
+      }
       connection.query(
         `SELECT count(Post_id) FROM posts where Username = "gfg";`,
         function (err, result1) {
@@ -354,8 +360,31 @@ router.post("/comparisonpost", function (request, response, next) {
             request.body.Category +
             '");',
             function (error, results, fields) {
-              console.log(error);
-              response.redirect("/expenditure");
+              
+              connection.query(
+                // hardcode kra hua hai
+                `SELECT SUM(Amount) FROM payment WHERE Username = "gfg" and Payment_category = 201 and Payment_month = "${request.body.month1}";`,  function (error, result1, fields) {
+                  const someVar1 = result1;
+                  console.log(someVar1);
+                  
+                  connection.query(
+                    `SELECT SUM(Amount) FROM payment WHERE Username = "gfg" and Payment_category = 201 and Payment_month = "${request.body.month2}";`,  function (error, result2, fields) {
+                      const someVar2 = result2;
+                      console.log(someVar2);
+                      
+                      // if (someVar1 >= someVar2) {
+                      //   someVar3 = ((someVar1 - someVar2) * 100) / someVar1;
+                      // }
+                      // else {
+                      //   someVar3 = ((someVar2 - someVar1) * 100) / someVar1;
+                      // }
+                      const someVar3 = (someVar1[0]['SUM(Amount)']) - (someVar2[0]['SUM(Amount)']);
+                      
+                      console.log(someVar3);
+                      response.redirect("/profile");
+                    }
+                  )
+                  })
             }
           )
         }
