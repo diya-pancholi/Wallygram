@@ -315,26 +315,35 @@ router.get("/deleteFriendRequest", function (req, res, next) {
 
 router.post("/comparisonpost", function (request, response, next) {
   console.log(request.body);
+  postid = 0
   connection.query(
-    'INSERT INTO posts (post_id,username,Caption) VALUES ("' +
-    "1114" +
-    '" , "' +
-    "gfg" +
-    '", "' +
-    request.body.caption +
-    '");',
-    function (error, results, fields) {
+    'SELECT count(Post_id) FROM posts;',
+    function (error, resultcount, fields) {
+      console.log(resultcount);
+      postid = resultcount[0]['count(Post_id)'] + 1;
+      console.log(postid);
       connection.query(
-        'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month) VALUES ("' +
-        "1114" +
+        'INSERT INTO posts (post_id,username,Caption) VALUES ("' +
+        postid +
         '" , "' +
-        request.body.month1 +
+        "gfg" +
         '", "' +
-        request.body.month2 +
+        request.body.caption +
         '");',
         function (error, results, fields) {
-          console.log(error);
-          response.redirect("/expenditure");
+          connection.query(
+            'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month) VALUES ("' +
+            postid +
+            '" , "' +
+            request.body.month1 +
+            '", "' +
+            request.body.month2 +
+            '");',
+            function (error, results, fields) {
+              console.log(error);
+              response.redirect("/expenditure");
+            }
+          )
         }
       )
     }
