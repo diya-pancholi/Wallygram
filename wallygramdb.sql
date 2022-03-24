@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS posts(
 
 ALTER TABLE posts ADD LikesCount int;
 ALTER TABLE posts ADD CommentsCount int;
+ALTER TABLE category_type ADD Category varchar(256);
 
 CREATE TABLE IF NOT EXISTS Comparison_Type(
     Post_id int,

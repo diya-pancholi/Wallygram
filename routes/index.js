@@ -10,7 +10,7 @@ const session = require("express-session");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "wallygramdb",
 });
 
@@ -329,10 +329,12 @@ router.post("/comparisonpost", function (request, response, next) {
     function (error, resultcount, fields) {
       postid = resultcount[0]['count(Post_id)'] + 1;
       connection.query(
-        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
+        'INSERT INTO posts (post_id,username,type,Caption, LikesCount, CommentsCount) VALUES ("' +
         postid +
         '" , "' +
         "gfg" +
+        '", "' +
+        'Comparison_Type' +
         '", "' +
         request.body.caption +
         '", "' +
@@ -369,11 +371,13 @@ router.post("/categorypost", function (request, response, next) {
     function (error, resultcount, fields) {
       postid = resultcount[0]['count(Post_id)'] + 1;
       connection.query(
-        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
+        'INSERT INTO posts (post_id,username,type,Caption, LikesCount, CommentsCount) VALUES ("' +
         postid +
         '" , "' +
         "gfg" +
         '", "' +
+        'Category_Type' +
+        '" , "' +
         request.body.caption +
         '", "' +
         0 + 
@@ -382,7 +386,7 @@ router.post("/categorypost", function (request, response, next) {
         '");',
         function (error, results, fields) {
           connection.query(
-            'INSERT INTO Category_Type (Post_id, Category) VALUES ("' +
+            'INSERT INTO category_type (Post_id, Category) VALUES ("' +
             postid +
             '" , "' +
             request.body.Category +
