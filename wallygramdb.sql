@@ -93,7 +93,6 @@ CREATE TABLE IF NOT EXISTS posts(
 
 ALTER TABLE posts ADD LikesCount int;
 ALTER TABLE posts ADD CommentsCount int;
-ALTER TABLE category_type ADD Category varchar(256);
 
 CREATE TABLE IF NOT EXISTS Comparison_Type(
     Post_id int,
@@ -104,6 +103,8 @@ CREATE TABLE IF NOT EXISTS Comparison_Type(
     FOREIGN KEY (Post_id) REFERENCES posts(Post_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE Comparison_Type ADD Category varchar(100);
 
 -- inserting posts of type comparison
 -- Insert into posts values(101,'Beautiful Posts','GYANVI',CURRENT_TIME(),'Comparison_Type');
@@ -118,6 +119,8 @@ CREATE TABLE IF NOT EXISTS Category_Type(
     FOREIGN KEY (Post_id) REFERENCES posts(Post_id)ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (payment_id) REFERENCES Payment(payment_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE Category_Type ADD Category varchar(100);
 
 -- inserting posts of type category
 -- Insert into posts values(102,'Foodie','GYANVI',CURRENT_TIME(),'Category_Type');
