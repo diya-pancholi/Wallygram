@@ -10,7 +10,7 @@ const session = require("express-session");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "root",
   database: "wallygramdb",
 });
 
@@ -61,22 +61,21 @@ router.post("/auth", function (request, response) {
           console.log(results, "abc");
           // console.log(request);
           console.log(request.session);
-          
+          // request.session.save(function () {
+          //   console.log(request.session);
+          //   response.redirect("/profile");
+          // })
           request.session.loggedin = true;
           request.session.uid = results[0].Username;
           console.log(request.session.uid);
           // request.session.regenerate(function(err) {
           //   request.session = {};
           // })
-          request.session.save(function (err) {
-            console.log(request.session);
-            response.redirect("/profile");
-          })
-          // response.redirect("/profile");
+          response.redirect("/profile");
         } else {
           response.send("Incorrect Username and/or Pswd!");
         }
-        // response.end();
+        response.end();
       }
     );
   } else {
@@ -86,29 +85,42 @@ router.post("/auth", function (request, response) {
 });
 
 router.get("/profile", function (request, response) {
-  var user = request.session.uid;
-  console.log("profile-request.session");
-  console.log(request.session);
-  console.log(request.session.uid);
+  // var user = request.session.uid;
+  // console.log(request.session.uid);
   connection.query(
-    `SELECT * FROM user_table where Username = ?;`, [user],
+    `SELECT * FROM user_table where Username = "gfg";`,
     function (err, result) {
-      if (err) {
+      if(err){
         console.error(err);
       }
+
       connection.query(
         `SELECT count(Post_id) FROM posts where Username = "gfg";`,
         function (err, result1) {
+          if(err){
+            console.error(err);
+          }
+
           connection.query(
             `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "gfg";`,
             function (err, result2) {
+              if(err){
+                console.error(err);
+              }
+
               connection.query(
                 `SELECT * FROM comments WHERE Post_id IN (SELECT Post_id FROM posts where Username = "gfg") ;`,
                 function (err, result3) {
                   connection.query(
-                    `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "gfg";`,
+                    `SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username = "gfg";`,
                     function (err, result4) {
+                      if(err){
+                        console.error(err);
+                      }
+                      console.log(result1);
+                      console.log(result2);
                       console.log(result3);
+                      console.log(result4);
                       response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3, catpostinfo : result4 });
                     }           
                   )
@@ -232,9 +244,9 @@ router.get("/feed", function (req, res, next) {
       connection.query(
         `SELECT * FROM comments;`, function (err, result1) {
           connection.query(
-            `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "gfg";`,
+            `SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username <> "gfg";`,
             function (err, result2) {
-              res.render("feed", { post: result, comments: result1, catpost : result2 });
+              res.render("feed", { post: result, comments: result1, catpostinfo : result2 });
             }           
           )
       });
@@ -335,12 +347,10 @@ router.post("/comparisonpost", function (request, response, next) {
     function (error, resultcount, fields) {
       postid = resultcount[0]['count(Post_id)'] + 1;
       connection.query(
-        'INSERT INTO posts (post_id,username,type,Caption, LikesCount, CommentsCount) VALUES ("' +
+        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
         postid +
         '" , "' +
         "gfg" +
-        '", "' +
-        'Comparison_Type' +
         '", "' +
         request.body.caption +
         '", "' +
@@ -360,31 +370,8 @@ router.post("/comparisonpost", function (request, response, next) {
             request.body.Category +
             '");',
             function (error, results, fields) {
-              
-              connection.query(
-                // hardcode kra hua hai
-                `SELECT SUM(Amount) FROM payment WHERE Username = "gfg" and Payment_category = 201 and Payment_month = "${request.body.month1}";`,  function (error, result1, fields) {
-                  const someVar1 = result1;
-                  console.log(someVar1);
-                  
-                  connection.query(
-                    `SELECT SUM(Amount) FROM payment WHERE Username = "gfg" and Payment_category = 201 and Payment_month = "${request.body.month2}";`,  function (error, result2, fields) {
-                      const someVar2 = result2;
-                      console.log(someVar2);
-                      
-                      // if (someVar1 >= someVar2) {
-                      //   someVar3 = ((someVar1 - someVar2) * 100) / someVar1;
-                      // }
-                      // else {
-                      //   someVar3 = ((someVar2 - someVar1) * 100) / someVar1;
-                      // }
-                      const someVar3 = (someVar1[0]['SUM(Amount)']) - (someVar2[0]['SUM(Amount)']);
-                      
-                      console.log(someVar3);
-                      response.redirect("/profile");
-                    }
-                  )
-                  })
+              console.log(error);
+              response.redirect("/expenditure");
             }
           )
         }
@@ -400,13 +387,11 @@ router.post("/categorypost", function (request, response, next) {
     function (error, resultcount, fields) {
       postid = resultcount[0]['count(Post_id)'] + 1;
       connection.query(
-        'INSERT INTO posts (post_id,username,type,Caption, LikesCount, CommentsCount) VALUES ("' +
+        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
         postid +
         '" , "' +
         "gfg" +
         '", "' +
-        'Category_Type' +
-        '" , "' +
         request.body.caption +
         '", "' +
         0 + 
@@ -415,14 +400,27 @@ router.post("/categorypost", function (request, response, next) {
         '");',
         function (error, results, fields) {
           connection.query(
-            'INSERT INTO category_type (Post_id, Category) VALUES ("' +
-            postid +
-            '" , "' +
-            request.body.Category +
-            '");',
-            function (error, results, fields) {
-              console.log(error);
-              response.redirect("/expenditure");
+            'SELECT SUM(Amount) FROM wallygramdb.payment WHERE Username = "gfg" AND Payment_month = ? AND paid_to = ?;',
+            [request.body.month, request.body.paidto],
+            function (error, results1, fields) {
+              connection.query(
+                'INSERT INTO Category_Type (Post_id, Category, Spending, Spending_month) VALUES ("' +
+                postid +
+                '" , "' +
+                request.body.Category +
+                '" , "' +
+                results1[0]['SUM(Amount)'] +
+                '" , "' +
+                request.body.month +
+                '");',
+                function (error, results2, fields) {
+                  console.log(error);
+                  console.log(results);
+                  console.log(results1);
+                  console.log(results2);
+                  response.redirect("/expenditure");
+                }
+              )
             }
           )
         }
