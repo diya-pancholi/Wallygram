@@ -69,6 +69,10 @@ CREATE TABLE IF NOT EXISTS Payment(
     PRIMARY KEY(payment_id)
 );
 
+ALTER TABLE Payment ADD Payment_month varchar(255);
+ALTER TABLE Payment ADD Category varchar(255);
+ALTER TABLE Payment ADD Username varchar(255);
+
 CREATE TABLE IF NOT EXISTS paid_by(
     payment_id int,
     username varchar(255),
@@ -121,6 +125,8 @@ CREATE TABLE IF NOT EXISTS Category_Type(
 );
 
 ALTER TABLE Category_Type ADD Category varchar(100);
+ALTER TABLE Category_Type ADD Spending int;
+ALTER TABLE Category_Type ADD Spending_month varchar(255);
 
 -- inserting posts of type category
 -- Insert into posts values(102,'Foodie','GYANVI',CURRENT_TIME(),'Category_Type');
