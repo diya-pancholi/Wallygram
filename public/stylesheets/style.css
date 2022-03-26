@@ -289,6 +289,15 @@ main .button1{
     padding:10px;
 }
 
+.category-auto-caption
+{
+    border-style:solid;
+    border-color:lightgrey;
+    border-top:0px;
+    border-bottom-style: dotted;
+    padding:10px;
+}
+
 .single-comment-data
 {
     border-style:solid;
@@ -532,4 +541,53 @@ main .button1{
     border-style:solid;
     border-color:lightgrey;
     padding:5px;
+}
+
+.category-option-row{
+    margin-top: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-bottom: 20px;
+}
+
+.category-post-text-input{
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.post-button-header-category
+{
+    border-top-style:dotted;
+    border-color:lightgrey;
+    padding:10px;
+    margin-top:20px;
+    margin-left: 250px;
+    margin-right: 250px;
+    justify-self: center;
+}
+
+.ffriend{
+    width:500px;
+    padding-left: 20px;
+    background: var(--color-light);
+}
+
+.go{
+    background: var(--color-light);
+    width:30px;
+}
+
+.send-req{
+    width: 200px;
+    margin-left: 150px;
+}
+
+.friend-search
+{
+    border-style:solid;
+    border-color:lightgrey;
+    padding:10px;
+    margin-top:60px;
 }
