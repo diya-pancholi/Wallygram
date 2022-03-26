@@ -33,19 +33,18 @@
       <div class="container">
         <h2 class="log app-name">Wallygram</h2>
         <div class="search-bar">
-          <i class="uil uil-search"></i>
-          <input
-            type="search"
-            placeholder="Search for your friends, inspirations and influencers"
-          />
-        </div>
-        <div class="home" a href="/feed">
+          <form action="/searchfriends" method="POST" name="form3" class="d-flex flex-row">
+              <input type="submit" class="uil uil-search" value="GO" class="go"/>
+              <input type="text" placeholder="Search for your friends, inspirations and influencers" name="findingfriend" id="findingfriend" class="ffriend">
+          </form> 
+      </div>
+        <div class="home" onclick="location.href='/feed'">
           <i class="uil uil-house-user"></i>
         </div>
-        <div class="friends" a href="location.href='/friendsAccepted">
+        <div class="friends" onclick="location.href='/friendsRequested'">
           <i class="uil uil-heart"></i>
         </div>
-        <div class="Profile" a href="/profile">
+        <div class="Profile" onclick="location.href='/profile'">
           <i class="uil uil-user"></i>
         </div>
         <div class="Profile-picture">

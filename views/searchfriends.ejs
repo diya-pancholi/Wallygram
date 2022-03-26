@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallygram</title>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cookie&family=Dancing+Script:wght@700&family=Great+Vibes&family=Permanent+Marker&family=Redressed&family=Sacramento&family=Satisfy&display=swap');
+    </style>
+
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h2 class="log app-name">
+                Wallygram
+            </h2>
+            <div class="search-bar">
+                <form action="/searchfriends" method="POST" name="form3" class="d-flex flex-row">
+                    <input type="submit" class="uil uil-search" value="GO" class="go"/>
+                    <input type="text" placeholder="Search for your friends, inspirations and influencers" name="findfriend" id="findfriend" class="ffriend">
+                </form> 
+            </div>
+        <div class="home" onclick="location.href='/feed'">
+            <i class="uil uil-house-user"></i>
+        </div>
+        <div class="friends" onclick="location.href='/friendsRequested'">
+            <i class="uil uil-heart"></i>
+        </div>
+        <div class="Profile" onclick="location.href='/profile'">
+            <i class="uil uil-user"></i>
+        </div>
+        <div class="Profile-picture">
+            <img src="/images/PP1.jpg">
+        </div>
+        </div>
+    </nav>
+    <main>
+        <div class="my-posts">
+          <% for (var i =0; i < findfriend.length; i++ ) { %>
+          <div class="single-post">
+            <div class="friend-search d-flex flex-row">
+              <img src="/images/green_badge.jpg" class="badge-in-post" />
+              <img src="/images/man1.jpg" class="post-image" />
+              <h3 class="post-name">
+                <i><%= findfriend[i].Username %></i> (<%= findfriend[i]._Name %>)
+              </h3>
+              <div class="send-req d-flex flex-row">
+                <button
+                  class="btn btn-light like-comment-button d-flex flex-row"
+                  onclick="location.href='/addFriend?id=<%= findfriend[i].Username %>'"
+                >
+                  <p class="like-comment">Send Friend Request</p>
+                </button>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </main>
+    <script src="/javascripts/main.js"></script>
+</body>
+</html>
