@@ -177,7 +177,7 @@ router.post("/comment", function (request, response, next) {
         'INSERT INTO comments (post_id,username,Caption) VALUES ("' +
         request.body.postid +
         '" , "' +
-        "anu" +
+        "gfg" +
         '", "' +
         request.body.comment +
         '");',
@@ -338,6 +338,51 @@ router.get("/deleteFriendRequest", function (req, res, next) {
     console.log("Rows affected:", result.affectedRows);
     res.redirect("/friendsRequested");
   })
+});
+
+router.post("/searchfriends", function (request, response, next) {
+  console.log(request.body);
+  connection.query(
+    `SELECT * FROM user_table WHERE Username = ?;`,
+    [request.body.findingfriend], 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log(result);
+      response.render("searchfriends", {findfriend : result});
+    }
+  )
+});
+
+router.get("/addfriend", function (request, response) {
+  console.log(request.query.id);
+   connection.query(
+    `SELECT * FROM user_table WHERE Username = ?;`,
+    [request.query.id], 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log(result);
+      connection.query(
+        'INSERT INTO friends_req (Username, friends_username, FriendName) VALUES ("' +
+            "gfg" +
+            '", "' +
+            request.query.id +
+            '", "' +
+            result[0]._Name + 
+            '");', 
+        function (err, result1) {
+          if (err){
+            return console.log(err);
+          }
+          response.redirect('/profile');
+        }
+      )
+    }
+  )
+  
 });
 
 router.post("/comparisonpost", function (request, response, next) {
