@@ -141,6 +141,7 @@ hr{
     width: 50%;
     
 }
+
 nav {
     width: 100%;
     background: var(--color-lightpink);
@@ -382,7 +383,7 @@ main .button1{
     padding: 20px;
 }
 .month{
-    margin-left: 60px;
+    margin-left: 50px;
 }
 .button3{
     background-color: var(--color-light);
@@ -394,7 +395,11 @@ main .button1{
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
+    margin-top: 20px;
+    margin-left: 0px;
+    margin-right: 30px;
 }
+
 
 .add-comment
 {
@@ -565,6 +570,17 @@ main .button1{
     margin-top:20px;
     margin-left: 250px;
     margin-right: 250px;
+    justify-self: center;
+}
+
+.show-button-header-category
+{
+    border-top-style:dotted;
+    border-color:lightgrey;
+    padding:10px;
+    margin-top:10px;
+    margin-left: 170px;
+    margin-right: 170px;
     justify-self: center;
 }
 
