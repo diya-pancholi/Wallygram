@@ -117,11 +117,15 @@ router.get("/profile", function (request, response) {
                       if(err){
                         console.error(err);
                       }
-                      console.log(result1);
-                      console.log(result2);
-                      console.log(result3);
-                      console.log(result4);
-                      response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3, catpostinfo : result4 });
+                      connection.query(
+                        `SELECT count(friends_username) FROM friends WHERE Username = "gfg";`,
+                        function (err, result5) {
+                          if(err){
+                            console.error(err);
+                          }
+                          response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3, catpostinfo : result4, friendcountinfo : result5 });
+                        }           
+                      )
                     }           
                   )
                 }           
@@ -268,9 +272,14 @@ router.get("/expenditure", function (req, res, next) {
     function (err, result) {
       connection.query(
         `SELECT count(Post_id) FROM posts where Username = "gfg";`,
-        function (err, result1) {
-              console.log(result1);
-              res.render("expenditure", {userinfo : result, postcountinfo:result1});
+        function (err, result1) {           
+              connection.query(
+                `SELECT count(friends_username) FROM friends WHERE Username = "gfg";`,
+                function (err, result2) {
+                      console.log(result1);
+                      res.render("expenditure", {userinfo : result, postcountinfo:result1, friendcountinfo : result2});
+                    }
+                  )
             }
           )
         }
