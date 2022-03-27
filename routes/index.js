@@ -90,17 +90,44 @@ router.get("/profile", function (request, response) {
   connection.query(
     `SELECT * FROM user_table where Username = "gfg";`,
     function (err, result) {
+      if(err){
+        console.error(err);
+      }
+
       connection.query(
         `SELECT count(Post_id) FROM posts where Username = "gfg";`,
         function (err, result1) {
+          if(err){
+            console.error(err);
+          }
+
           connection.query(
-            `SELECT * FROM posts where Username = "gfg";`,
+            `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "gfg";`,
             function (err, result2) {
+              if(err){
+                console.error(err);
+              }
+
               connection.query(
                 `SELECT * FROM comments WHERE Post_id IN (SELECT Post_id FROM posts where Username = "gfg") ;`,
                 function (err, result3) {
-                  console.log(result3);
-                  response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3 });
+                  connection.query(
+                    `SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username = "gfg";`,
+                    function (err, result4) {
+                      if(err){
+                        console.error(err);
+                      }
+                      connection.query(
+                        `SELECT count(friends_username) FROM friends WHERE Username = "gfg";`,
+                        function (err, result5) {
+                          if(err){
+                            console.error(err);
+                          }
+                          response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, comments : result3, catpostinfo : result4, friendcountinfo : result5 });
+                        }           
+                      )
+                    }           
+                  )
                 }           
               )
             }           
@@ -154,7 +181,7 @@ router.post("/comment", function (request, response, next) {
         'INSERT INTO comments (post_id,username,Caption) VALUES ("' +
         request.body.postid +
         '" , "' +
-        "anu" +
+        "gfg" +
         '", "' +
         request.body.comment +
         '");',
@@ -217,12 +244,15 @@ router.get("/feed", function (req, res, next) {
   console.log("feed");
   var post = undefined;
   connection.query(
-    `SELECT * FROM posts where Username <> "gfg";`, function (err, result) {
+    `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username <> "gfg";`, function (err, result) {
       connection.query(
         `SELECT * FROM comments;`, function (err, result1) {
-        console.log(err);
-        console.log(result1);
-        res.render("feed", { post: result, comments: result1 });
+          connection.query(
+            `SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username <> "gfg";`,
+            function (err, result2) {
+              res.render("feed", { post: result, comments: result1, catpostinfo : result2 });
+            }           
+          )
       });
   });
 });
@@ -242,9 +272,14 @@ router.get("/expenditure", function (req, res, next) {
     function (err, result) {
       connection.query(
         `SELECT count(Post_id) FROM posts where Username = "gfg";`,
-        function (err, result1) {
-              console.log(result1);
-              res.render("expenditure", {userinfo : result, postcountinfo:result1});
+        function (err, result1) {           
+              connection.query(
+                `SELECT count(friends_username) FROM friends WHERE Username = "gfg";`,
+                function (err, result2) {
+                      console.log(result1);
+                      res.render("expenditure", {userinfo : result, postcountinfo:result1, friendcountinfo : result2});
+                    }
+                  )
             }
           )
         }
@@ -302,6 +337,7 @@ router.get("/acceptFriendRequest", function (req, res, next) {
     })
   });
 });
+
 router.get("/deleteFriendRequest", function (req, res, next) {
   console.log(req.query.id);
   connection.query(`DELETE FROM friends_req WHERE Username = "gfg" and friends_username = "${req.query.id}";`, function (error, result) {
@@ -313,28 +349,134 @@ router.get("/deleteFriendRequest", function (req, res, next) {
   })
 });
 
-router.post("/comparisonpost", function (request, response, next) {
+router.post("/searchfriends", function (request, response, next) {
   console.log(request.body);
   connection.query(
-    'INSERT INTO posts (post_id,username,Caption) VALUES ("' +
-    "1114" +
-    '" , "' +
-    "gfg" +
-    '", "' +
-    request.body.caption +
-    '");',
-    function (error, results, fields) {
+    `SELECT * FROM user_table WHERE Username = ?;`,
+    [request.body.findingfriend], 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log(result);
+      response.render("searchfriends", {findfriend : result});
+    }
+  )
+});
+
+router.get("/addfriend", function (request, response) {
+  console.log(request.query.id);
+   connection.query(
+    `SELECT * FROM user_table WHERE Username = ?;`,
+    [request.query.id], 
+    function (err, result) {
+      if (err){
+        return console.log(err);
+      }
+      console.log(result);
       connection.query(
-        'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month) VALUES ("' +
-        "1114" +
+        'INSERT INTO friends_req (Username, friends_username, FriendName) VALUES ("' +
+            "gfg" +
+            '", "' +
+            request.query.id +
+            '", "' +
+            result[0]._Name + 
+            '");', 
+        function (err, result1) {
+          if (err){
+            return console.log(err);
+          }
+          response.redirect('/profile');
+        }
+      )
+    }
+  )
+  
+});
+
+router.post("/comparisonpost", function (request, response, next) {
+  postid = 0
+  connection.query(
+    'SELECT count(Post_id) FROM posts;',
+    function (error, resultcount, fields) {
+      postid = resultcount[0]['count(Post_id)'] + 1;
+      connection.query(
+        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
+        postid +
         '" , "' +
-        request.body.month1 +
+        "gfg" +
         '", "' +
-        request.body.month2 +
+        request.body.caption +
+        '", "' +
+        0 + 
+        '", "' +
+        0 +
         '");',
         function (error, results, fields) {
-          console.log(error);
-          response.redirect("/expenditure");
+          connection.query(
+            'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month, Category) VALUES ("' +
+            postid +
+            '" , "' +
+            request.body.month1 +
+            '", "' +
+            request.body.month2 +
+            '", "' +
+            request.body.Category +
+            '");',
+            function (error, results, fields) {
+              console.log(error);
+              response.redirect("/expenditure");
+            }
+          )
+        }
+      )
+    }
+  )
+});
+
+router.post("/categorypost", function (request, response, next) {
+  postid = 0
+  connection.query(
+    'SELECT count(Post_id) FROM posts;',
+    function (error, resultcount, fields) {
+      postid = resultcount[0]['count(Post_id)'] + 1;
+      connection.query(
+        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
+        postid +
+        '" , "' +
+        "gfg" +
+        '", "' +
+        request.body.caption +
+        '", "' +
+        0 + 
+        '", "' +
+        0 +
+        '");',
+        function (error, results, fields) {
+          connection.query(
+            'SELECT SUM(Amount) FROM wallygramdb.payment WHERE Username = "gfg" AND Payment_month = ? AND paid_to = ?;',
+            [request.body.month, request.body.paidto],
+            function (error, results1, fields) {
+              connection.query(
+                'INSERT INTO Category_Type (Post_id, Category, Spending, Spending_month) VALUES ("' +
+                postid +
+                '" , "' +
+                request.body.Category +
+                '" , "' +
+                results1[0]['SUM(Amount)'] +
+                '" , "' +
+                request.body.month +
+                '");',
+                function (error, results2, fields) {
+                  console.log(error);
+                  console.log(results);
+                  console.log(results1);
+                  console.log(results2);
+                  response.redirect("/expenditure");
+                }
+              )
+            }
+          )
         }
       )
     }
