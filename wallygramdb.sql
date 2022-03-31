@@ -109,6 +109,8 @@ CREATE TABLE IF NOT EXISTS Comparison_Type(
 );
 
 ALTER TABLE Comparison_Type ADD Category varchar(100);
+ALTER TABLE Comparison_Type ADD Comp_percent int;
+ALTER TABLE Comparison_Type ADD Curr_percent int;
 
 -- inserting posts of type comparison
 -- Insert into posts values(101,'Beautiful Posts','GYANVI',CURRENT_TIME(),'Comparison_Type');
