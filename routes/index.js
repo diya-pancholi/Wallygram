@@ -26,6 +26,18 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
+class User
+{
+    getUserInfo(username)
+    {
+      var sql = `SELECT * FROM user_table where Username = "${username}";`;
+      return sql;
+    }
+}
+
+const user = new User;
+console.log(user.getUserInfo("gfg"))
+
 router.post("/register", function (req, res, next) {
   console.log(req.body);
 
@@ -81,7 +93,7 @@ router.get("/profile", function (request, response) {
   // var user = request.session.uid;
   // console.log(request.session.uid);
   connection.query(
-    `SELECT * FROM user_table where Username = "gfg";`,
+    user.getUserInfo("gfg"),
     function (err, result) {
       if(err){
         console.error(err);
