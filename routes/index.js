@@ -22,6 +22,10 @@ connection.connect(function (err) {
   console.log("Connected to the MySQL server.");
 });
 
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 router.post("/register", function (req, res, next) {
   console.log(req.body);
 
@@ -32,12 +36,9 @@ router.post("/register", function (req, res, next) {
       req.body.name +
       '", "' +
       req.body.pswd +
-      // crypto.createHash("sha256").update(req.body.pswd).digest("hex") +
       '");',
     function (error, results, fields) {
       console.log(error);
-      // request.session.loggedin = true;
-      // request.session.uid = results[0].id;
       res.redirect("/auth");
     }
   );
@@ -46,10 +47,6 @@ router.post("/register", function (req, res, next) {
 router.post("/auth", function (request, response) {
   var Username = request.body.Username;
   var pswd = request.body.pswd;
-  // crypto
-  //   .createHash("sha256")
-  //   .update(request.body.pswd)
-  //   .digest("hex");
   console.log(Username, pswd);
   if (Username && pswd) {
     connection.query(
@@ -61,10 +58,6 @@ router.post("/auth", function (request, response) {
           console.log(results, "abc");
           // console.log(request);
           console.log(request.session);
-          // request.session.save(function () {
-          //   console.log(request.session);
-          //   response.redirect("/profile");
-          // })
           request.session.loggedin = true;
           request.session.uid = results[0].Username;
           console.log(request.session.uid);
@@ -267,23 +260,121 @@ router.get("/expenseCategory", function (req, res, next) {
 });
 
 router.get("/expenditure", function (req, res, next) {
-  connection.query(
-    `SELECT * FROM user_table where Username = "gfg";`,
-    function (err, result) {
-      connection.query(
-        `SELECT count(Post_id) FROM posts where Username = "gfg";`,
-        function (err, result1) {           
+  console.log(req.query.month)
+  if(req.query.month == undefined)
+  {
+    const d = new Date();
+    var currMonth = monthNames[d.getMonth()];
+    console.log(currMonth);
+    connection.query(
+      `SELECT * FROM user_table where Username = "gfg";`,
+      function (err, result) {
+        connection.query(
+          `SELECT count(Post_id) FROM posts where Username = "gfg";`,
+          function (err, result1) {           
               connection.query(
                 `SELECT count(friends_username) FROM friends WHERE Username = "gfg";`,
                 function (err, result2) {
-                      console.log(result1);
-                      res.render("expenditure", {userinfo : result, postcountinfo:result1, friendcountinfo : result2});
+                  connection.query(
+                    `SELECT SUM(Amount) FROM payment WHERE Category = "Shopping" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                    function (err, Shopping) {
+                      connection.query(
+                        `SELECT SUM(Amount) FROM payment WHERE Category = "Food" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                        function (err, Food) {
+                          connection.query(
+                            `SELECT SUM(Amount) FROM payment WHERE Category = "Bills" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                            function (err, Bills) {
+                              connection.query(
+                                `SELECT SUM(Amount) FROM payment WHERE Category = "Savings" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                                function (err, Savings) {
+                                  connection.query(
+                                    `SELECT SUM(Amount) FROM payment WHERE Category = "Health" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                                    function (err, Health) {
+                                      connection.query(
+                                        `SELECT SUM(Amount) FROM payment WHERE Category = "Misc" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                                        function (err, Misc) {
+                                            shop_sum = Shopping[0]['SUM(Amount)'];
+                                            food_sum = Food[0]['SUM(Amount)'];
+                                            bills_sum = Bills[0]['SUM(Amount)'];
+                                            savings_sum = Savings[0]['SUM(Amount)'];
+                                            health_sum = Health[0]['SUM(Amount)'];
+                                            misc_sum = Misc[0]['SUM(Amount)'];
+                                            res.render("expenditure", {userinfo : result, postcountinfo:result1, friendcountinfo : result2, shopping : shop_sum, food : food_sum, bills : bills_sum, health : health_sum, savings : savings_sum, misc : misc_sum});
+                                        }
+                                      )
+                                    }
+                                  )
+                                }
+                              )
+                            }
+                          )
+                        }
+                      )
                     }
                   )
-            }
-          )
-        }
-      )
+                }
+              )
+          }
+        )
+      }
+    )
+  }
+  else
+  {
+    var currMonth = req.query.month;
+    connection.query(
+      `SELECT * FROM user_table where Username = "gfg";`,
+      function (err, result) {
+        connection.query(
+          `SELECT count(Post_id) FROM posts where Username = "gfg";`,
+          function (err, result1) {           
+              connection.query(
+                `SELECT count(friends_username) FROM friends WHERE Username = "gfg";`,
+                function (err, result2) {
+                  connection.query(
+                    `SELECT SUM(Amount) FROM payment WHERE Category = "Shopping" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                    function (err, Shopping) {
+                      connection.query(
+                        `SELECT SUM(Amount) FROM payment WHERE Category = "Food" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                        function (err, Food) {
+                          connection.query(
+                            `SELECT SUM(Amount) FROM payment WHERE Category = "Bills" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                            function (err, Bills) {
+                              connection.query(
+                                `SELECT SUM(Amount) FROM payment WHERE Category = "Savings" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                                function (err, Savings) {
+                                  connection.query(
+                                    `SELECT SUM(Amount) FROM payment WHERE Category = "Health" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                                    function (err, Health) {
+                                      connection.query(
+                                        `SELECT SUM(Amount) FROM payment WHERE Category = "Misc" AND Payment_month = ? AND Username = "gfg";`, [currMonth],
+                                        function (err, Misc) {
+                                            shop_sum = Shopping[0]['SUM(Amount)'];
+                                            food_sum = Food[0]['SUM(Amount)'];
+                                            bills_sum = Bills[0]['SUM(Amount)'];
+                                            savings_sum = Savings[0]['SUM(Amount)'];
+                                            health_sum = Health[0]['SUM(Amount)'];
+                                            misc_sum = Misc[0]['SUM(Amount)'];
+                                            res.render("expenditure", {userinfo : result, postcountinfo:result1, friendcountinfo : result2, shopping : shop_sum, food : food_sum, bills : bills_sum, health : health_sum, savings : savings_sum, misc : misc_sum});
+                                        }
+                                      )
+                                    }
+                                  )
+                                }
+                              )
+                            }
+                          )
+                        }
+                      )
+                    }
+                  )
+                }
+              )
+          }
+        )
+      }
+    )
+  }  
 });
 
 router.get("/registerviaimg", function (req, res, next) {
@@ -401,31 +492,73 @@ router.post("/comparisonpost", function (request, response, next) {
     function (error, resultcount, fields) {
       postid = resultcount[0]['count(Post_id)'] + 1;
       connection.query(
-        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
-        postid +
-        '" , "' +
-        "gfg" +
-        '", "' +
-        request.body.caption +
-        '", "' +
-        0 + 
-        '", "' +
-        0 +
-        '");',
-        function (error, results, fields) {
+        `SELECT SUM(Amount) FROM payment WHERE Payment_month = ? AND Category = ? AND Username = "gfg";`,
+        [request.body.month1, request.body.Category], 
+        function (err, month1_cat_sum) {
+          if (err){
+            return console.log(err);
+          }
           connection.query(
-            'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month, Category) VALUES ("' +
-            postid +
-            '" , "' +
-            request.body.month1 +
-            '", "' +
-            request.body.month2 +
-            '", "' +
-            request.body.Category +
-            '");',
-            function (error, results, fields) {
-              console.log(error);
-              response.redirect("/expenditure");
+            `SELECT SUM(Amount) FROM payment WHERE Payment_month = ? AND Category = ? AND Username = "gfg";`,
+            [request.body.month2, request.body.Category], 
+            function (err, month2_cat_sum) {
+              if (err){
+                return console.log(err);
+              }
+              connection.query(
+                `SELECT SUM(Amount) FROM payment WHERE Payment_month = ? AND Username = "gfg";`,
+                [request.body.month1], 
+                function (err, month1_sum) {
+                  if (err){
+                    return console.log(err);
+                  }
+                  connection.query(
+                    `SELECT SUM(Amount) FROM payment WHERE Payment_month = ? AND Username = "gfg";`,
+                    [request.body.month2], 
+                    function (err, month2_sum) {
+                      if (err){
+                        return console.log(err);
+                      }
+                      percent1 = (month1_cat_sum[0]['SUM(Amount)'] / month1_sum[0]['SUM(Amount)'] ) * 100;
+                      percent2 = (month2_cat_sum[0]['SUM(Amount)'] / month2_sum[0]['SUM(Amount)'] ) * 100;
+                      connection.query(
+                        'INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES ("' +
+                        postid +
+                        '" , "' +
+                        "gfg" +
+                        '", "' +
+                        request.body.caption +
+                        '", "' +
+                        0 + 
+                        '", "' +
+                        0 +
+                        '");',
+                        function (error, results, fields) {
+                          connection.query(
+                            'INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month, Category, Comp_percent, Curr_percent) VALUES ("' +
+                            postid +
+                            '" , "' +
+                            request.body.month1 +
+                            '", "' +
+                            request.body.month2 +
+                            '", "' +
+                            request.body.Category +
+                            '", "' +
+                            percent1 +
+                            '", "' +
+                            percent2 +
+                            '");',
+                            function (error, results, fields) {
+                              console.log(error);
+                              response.redirect("/expenditure");
+                            }
+                          )
+                        }
+                      )
+                    }
+                  )
+                }
+              )
             }
           )
         }
