@@ -155,6 +155,12 @@
           </div>
       </div>
     <script>
+    let shop = '<%-shopping%>'
+    let food = '<%-food%>'
+    let bills = '<%-bills%>'
+    let health = '<%-health%>'
+    let savings = '<%-savings%>'
+    let misc = '<%-misc%>';
     const data1 = {
         labels: [
           'Shopping',
@@ -167,12 +173,12 @@
         datasets: [{
           label: 'First Pie chart',
           data: [
-              { financials: 'Shopping', url: '/Expense_category.html', amount: { usd: 10 }},
-              { financials: 'Food', url: '/Expense_category.html', amount: { usd: 30 }},
-              { financials: 'Bills', url: '/Expense_category.html', amount: { usd: 20 }},
-              { financials: 'Savings', url: '/Expense_category.html', amount: { usd: 10 }},
-              { financials: 'Health', url: '/Expense_category.html', amount: { usd: 15 }},
-              { financials: 'Misc', url: '/Expense_category.html', amount: { usd: 15 }},
+              { financials: 'Shopping', url: '/Expense_category.html', amount: { usd: shop}},
+              { financials: 'Food', url: '/Expense_category.html', amount: { usd: food }},
+              { financials: 'Bills', url: '/Expense_category.html', amount: { usd: bills }},
+              { financials: 'Savings', url: '/Expense_category.html', amount: { usd: savings }},
+              { financials: 'Health', url: '/Expense_category.html', amount: { usd: health }},
+              { financials: 'Misc', url: '/Expense_category.html', amount: { usd: misc }},
           ],
           backgroundColor: [
             'rgb(100, 255, 100)',
@@ -185,7 +191,6 @@
           hoverOffset: 4
         }]
       };
-
     const config = {
         type: 'doughnut',
         data: data1,
@@ -221,7 +226,7 @@
     </script>
 
     <div class="my-expenditure">  
-      <form action="/expendituremonth" method="POST" name="expmonthform">
+      <form action="/expenditure" method="GET" name="expmonthform">
         <div class ="category-option-row d-flex flex-row">
           <select name="month" id="month" class="dropbtn">
             <option> Month</option>
