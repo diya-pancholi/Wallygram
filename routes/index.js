@@ -7,6 +7,10 @@ var crypto = require("crypto");
 const session = require("express-session");
 const exp = require("constants");
 const util = require( 'util' );
+const User = require('../modules/users');
+const Posts = require('../modules/posts');
+const Friends = require('../modules/friends');
+const Expenditures = require('../modules/expenditures');
 
 function makeDb() {
   const connection = mysql.createConnection({
@@ -55,186 +59,10 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
-class User
-{
-    getUserInfo(username)
-    {
-      var sql = `SELECT * FROM user_table where Username = "${username}";`;
-      return sql;
-    }
-
-    addUser(username, name, password)
-    {
-      var sql = `INSERT INTO user_table (Username,_Name,_Password) VALUES ("${username}", "${name}", "${password}");`; 
-      return sql;
-    }
-
-    checkLogIn(username, password)
-    {
-      var sql = `SELECT * FROM user_table WHERE Username = "${username}" AND _Password = "${password}";`;
-      return sql;
-    }
-}
-
-class Posts
-{
-    getPostCount()
-    {
-      var sql = `SELECT count(Post_id) FROM posts;`;
-      return sql;
-    }
-
-    getProfilePostCount(username)
-    {
-      var sql = `SELECT count(Post_id) FROM posts where Username = "${username}";`;
-      return sql;
-    }
-
-    addPost(postID, username, caption)
-    {
-      var sql = `INSERT INTO posts (post_id,username,Caption, LikesCount, CommentsCount) VALUES (${postID}, "${username}", "${caption}", 0, 0);`;
-      return sql;
-    }
-
-    addComparisonPost(postID, month1, month2, category, percent1, percent2)
-    {
-      var sql =  `INSERT INTO Comparison_Type (Post_id,Comp_month,Curr_month, Category, Comp_percent, Curr_percent) VALUES (${postID}, "${month1}", "${month2}", "${category}", ${percent1}, ${percent2});`;
-      return sql;
-    }
-
-    addCategoryPost(postID, category, amount, month)
-    {
-      var sql =  `INSERT INTO Category_Type (Post_id, Category, Spending, Spending_month) VALUES (${postID}, "${category}", ${amount}, "${month}");`;
-      return sql;
-    }
-
-    getProfileCategoryPosts(username)
-    {
-      var sql = `SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username = "${username}";`;
-      return sql;
-    }
-
-    getProfileComparisonPosts(username)
-    {
-      var sql = `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "${username}";`;
-      return sql;
-    }
-
-    getFeedCategoryPosts(username)
-    {
-      var sql = `SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username <> "${username}";`;
-      return sql;
-    }
-
-    getFeedComparisonPosts(username)
-    {
-      var sql = `SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username <> "${username}";`;
-      return sql;
-    }
-
-    getProfileComments(username)
-    {
-      var sql = `SELECT * FROM comments WHERE Post_id IN (SELECT Post_id FROM posts where Username = "${username}") ;`;
-      return sql;
-    }
-
-    getFeedComments(username)
-    {
-      var sql = `SELECT * FROM comments;`;
-      return sql;
-    }
-
-    updateLikes(postID)
-    {
-      var sql = `UPDATE posts SET LikesCount = LikesCount + 1 WHERE Post_id= ${postID};`;
-      return sql;
-    }
-
-    updateCommentCount(postID)
-    {
-      var sql = `UPDATE posts SET CommentsCount = CommentsCount + 1 WHERE Post_id= ${postID};`;
-      return sql;
-    }
-
-    insertComment(postID, username, comment)
-    {
-      var sql = `INSERT INTO comments (post_id,username,Caption) VALUES (${postID}, "${username}", "${comment}")`;
-      return sql;
-    }
-}
-
-class Friends
-{
-    getFriendCount(username)
-    {
-      var sql = `SELECT count(friends_username) FROM friends WHERE Username = "${username}";`;
-      return sql;
-    }
-
-    getFriendRequests(username)
-    {
-      var sql = `SELECT * from friends_req WHERE Username = "${username}"`;
-      return sql;
-    }
-
-    addFriendRequest(username, friendusername, friendname)
-    {
-      var sql = `INSERT INTO friends_req (Username, friends_username, FriendName) VALUES ("${username}", "${friendusername}", "${friendname}");`;
-      return sql;
-    }
-
-    deleteFriendRequest(username, friendusername)
-    {
-      var sql = `DELETE FROM friends_req WHERE Username = "${username}" and friends_username = "${friendusername}";`;
-      return sql;
-    }
-
-    getFriends(username)
-    {
-      var sql = `SELECT * from friends WHERE Username = "${username}"`;
-      return sql;
-    }
-
-    addFriend(username, friendusername)
-    {
-      var sql = `INSERT INTO friends (Username, friends_username) VALUES ("${username}", "${friendusername}");`;
-      return sql;
-    }
-
-    deleteFriend(username, friendusername)
-    {
-      var sql = `DELETE FROM friends WHERE Username = "${username}" and friends_username = "${friendusername}";`;
-      return sql;
-    }
-}
-
-class Expenditures
-{
-    getMonthlyCategoryWiseExpense(category, month, username)
-    {
-      var sql = `SELECT SUM(Amount) FROM payment WHERE Category = "${category}" AND Payment_month = "${month}" AND Username = "${username}";`;
-      return sql;
-    }
-
-    getMonthlyLocationWiseExpense(location, month, username)
-    {
-      var sql = `SELECT SUM(Amount) FROM wallygramdb.payment WHERE Username = "${username}" AND Payment_month = "${month}" AND paid_to = "${location}";`;
-      return sql;
-    }
-
-    getMonthlyExpense(month, username)
-    {
-      var sql = `SELECT SUM(Amount) FROM payment WHERE Payment_month = "${month}" AND Username = "${username}";`;
-      return sql;
-    }
-}
-
-const user = new User;
-const post = new Posts;
-const friend = new Friends;
-const expenditure = new Expenditures;
-
-
+const user = new User();
+const post = new Posts();
+const friend = new Friends();
+const expenditure = new Expenditures();
 
 router.get("/", function (req, res, next) {
   console.log("hi");
@@ -306,7 +134,7 @@ router.get("/loginviaimg", function (req, res, next) {
 router.get("/profile", function (request, response) {
   // var user = request.session.uid;
   // console.log(request.session.uid);
-
+  console.log("Hello");
   const db = makeDb();
   try {
     withTransaction( db, async () => {
@@ -345,80 +173,69 @@ router.get("/like", function (request, response) {
 
 router.get("/likefeed", function (request, response) {
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(post.updateLikes(request.query.id));
-      response.redirect('/feed');
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(post.updateLikes(request.query.id));
+  response.redirect('/feed');
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.post("/comment", function (request, response, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+// var user = request.session.uid;
+// console.log(request.session.uid);
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(post.updateCommentCount(request.body.postid));
-      const result1 = await db.query(post.insertComment(request.body.postid, "gfg", request.body.comment));
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(post.updateCommentCount(request.body.postid));
+  const result1 = await db.query(post.insertComment(request.body.postid, "gfg", request.body.comment));
 
-      response.redirect("/profile");
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  response.redirect("/profile");
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.post("/commentfeed", function (request, response, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+// var user = request.session.uid;
+// console.log(request.session.uid);
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(post.updateCommentCount(request.body.postid));
-      const result1 = await db.query(post.insertComment(request.body.postid, "gfg", request.body.comment));
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(post.updateCommentCount(request.body.postid));
+  const result1 = await db.query(post.insertComment(request.body.postid, "gfg", request.body.comment));
 
-      response.redirect("/feed");
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  response.redirect("/feed");
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
-router.get("/feed", function (req, res, next) {
-  console.log("feed");
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
-
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(post.getFeedComparisonPosts("gfg"));
-      const result1 = await db.query(post.getFeedCategoryPosts("gfg"));
-      const result2 = await db.query(post.getFeedComments("gfg"));
-
-      res.render("feed", { post: result, catpostinfo : result1, comments: result2 });
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
-  }
+router.get("/share", function (req, res, next) {
+  console.log("share");
+  connection.query(`set insert query`, (error, results, fields) => {
+      if (error) {
+      return console.error(error.message);
+      }
+      console.log("Rows affected:", results.affectedRows);
+      res.redirect("profile", { title: "Express" });
+  });
 });
 
 router.get("/expenseCategory", function (req, res, next) {
@@ -470,17 +287,6 @@ router.get("/expenditure", function (req, res, next) {
   }  
 });
 
-router.get("/share", function (req, res, next) {
-  console.log("share");
-  connection.query(`set insert query`, (error, results, fields) => {
-    if (error) {
-      return console.error(error.message);
-    }
-    console.log("Rows affected:", results.affectedRows);
-    res.redirect("profile", { title: "Express" });
-  });
-});
-
 router.get("/friendsRequested", function (req, res, next) {
   console.log("friendsRequested");
   // var user = request.session.uid;
@@ -502,111 +308,133 @@ router.get("/friendsRequested", function (req, res, next) {
 });
 
 router.get("/friendsAccepted", function (req, res, next) {
-  console.log("friendsAccepted");
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+console.log("friendsAccepted");
+// var user = request.session.uid;
+// console.log(request.session.uid);
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(friend.getFriends("gfg"));
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(friend.getFriends("gfg"));
 
-      res.render("friends_accepted", { friend: result });
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  res.render("friends_accepted", { friend: result });
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.get("/removeFriend", function (req, res, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+// var user = request.session.uid;
+// console.log(request.session.uid);
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(friend.deleteFriend("gfg", req.query.id));
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(friend.deleteFriend("gfg", req.query.id));
 
-      res.redirect("/friendsAccepted");
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  res.redirect("/friendsAccepted");
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.get("/acceptFriendRequest", function (req, res, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+// var user = request.session.uid;
+// console.log(request.session.uid);
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(friend.addFriend("gfg", req.query.id));
-      const result1 = await db.query(friend.deleteFriendRequest("gfg", req.query.id));
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(friend.addFriend("gfg", req.query.id));
+  const result1 = await db.query(friend.deleteFriendRequest("gfg", req.query.id));
 
-      res.redirect("/friendsRequested");
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  res.redirect("/friendsRequested");
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.get("/deleteFriendRequest", function (req, res, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+// var user = request.session.uid;
+// console.log(request.session.uid);
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(friend.deleteFriendRequest("gfg", req.query.id));
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(friend.deleteFriendRequest("gfg", req.query.id));
 
-      res.redirect("/friendsRequested");
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  res.redirect("/friendsRequested");
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.post("/searchfriends", function (request, response, next) {
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const result = await db.query(user.getUserInfo(request.body.findingfriend));
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(user.getUserInfo(request.body.findingfriend));
 
-      response.render("searchfriends", {findfriend : result});
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  response.render("searchfriends", {findfriend : result});
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.get("/addfriend", function (request, response) {
+// var user = request.session.uid;
+// console.log(request.session.uid);
+
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const result = await db.query(user.getUserInfo(request.query.id));
+  const result1 = await db.query(friend.addFriendRequest("gfg", request.query.id, result[0]._Name));
+
+  response.redirect('/profile');
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
+  }
+}
+});
+
+router.get("/feed", function (req, res, next) {
+  console.log("feed");
   // var user = request.session.uid;
   // console.log(request.session.uid);
 
   const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await db.query(user.getUserInfo(request.query.id));
-      const result1 = await db.query(friend.addFriendRequest("gfg", request.query.id, result[0]._Name));
+      const result = await db.query(post.getFeedComparisonPosts("gfg"));
+      const result1 = await db.query(post.getFeedCategoryPosts("gfg"));
+      const result2 = await db.query(post.getFeedComments("gfg"));
 
-      response.redirect('/profile');
+      res.render("feed", { post: result, catpostinfo : result1, comments: result2 });
     } );
   } catch ( err ) {
     if(err)
@@ -617,60 +445,60 @@ router.get("/addfriend", function (request, response) {
 });
 
 router.post("/comparisonpost", function (request, response, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
-  var postid = 0;
+// var user = request.session.uid;
+// console.log(request.session.uid);
+var postid = 0;
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const resultcount = await db.query(post.getPostCount());
-      postid = resultcount[0]['count(Post_id)'] + 1;
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const resultcount = await db.query(post.getPostCount());
+  postid = resultcount[0]['count(Post_id)'] + 1;
 
-      const month1_cat_sum = await db.query(expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month1, "gfg"));
-      const month2_cat_sum = await db.query(expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month2, "gfg"));
-      const month1_sum = await db.query(expenditure.getMonthlyExpense(request.body.month1, "gfg"));
-      const month2_sum = await db.query(expenditure.getMonthlyExpense(request.body.month2, "gfg"));
-      percent1 = (month1_cat_sum[0]['SUM(Amount)'] / month1_sum[0]['SUM(Amount)'] ) * 100;
-      percent2 = (month2_cat_sum[0]['SUM(Amount)'] / month2_sum[0]['SUM(Amount)'] ) * 100;
+  const month1_cat_sum = await db.query(expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month1, "gfg"));
+  const month2_cat_sum = await db.query(expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month2, "gfg"));
+  const month1_sum = await db.query(expenditure.getMonthlyExpense(request.body.month1, "gfg"));
+  const month2_sum = await db.query(expenditure.getMonthlyExpense(request.body.month2, "gfg"));
+  percent1 = (month1_cat_sum[0]['SUM(Amount)'] / month1_sum[0]['SUM(Amount)'] ) * 100;
+  percent2 = (month2_cat_sum[0]['SUM(Amount)'] / month2_sum[0]['SUM(Amount)'] ) * 100;
 
-      const result1 = await db.query(post.addPost(postid, "gfg", request.body.caption));
-      const result2 = await db.query(post.addComparisonPost(postid, request.body.month1, request.body.month2, request.body.Category, percent1, percent2));
+  const result1 = await db.query(post.addPost(postid, "gfg", request.body.caption));
+  const result2 = await db.query(post.addComparisonPost(postid, request.body.month1, request.body.month2, request.body.Category, percent1, percent2));
 
-      response.redirect("/expenditure");
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  response.redirect("/expenditure");
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 router.post("/categorypost", function (request, response, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
-  var postid = 0;
+// var user = request.session.uid;
+// console.log(request.session.uid);
+var postid = 0;
 
-  const db = makeDb();
-  try {
-    withTransaction( db, async () => {
-      const resultcount = await db.query(post.getPostCount());
-      postid = resultcount[0]['count(Post_id)'] + 1;
+const db = makeDb();
+try {
+  withTransaction( db, async () => {
+  const resultcount = await db.query(post.getPostCount());
+  postid = resultcount[0]['count(Post_id)'] + 1;
 
-      const cost = await db.query(expenditure.getMonthlyLocationWiseExpense(request.body.paidto, request.body.month, "gfg"));
+  const cost = await db.query(expenditure.getMonthlyLocationWiseExpense(request.body.paidto, request.body.month, "gfg"));
 
-      const result = await db.query(post.addPost(postid, "gfg", request.body.caption));
-      const result1 = await db.query(post.addCategoryPost(postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month));
+  const result = await db.query(post.addPost(postid, "gfg", request.body.caption));
+  const result1 = await db.query(post.addCategoryPost(postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month));
 
-      response.redirect("/expenditure");
-    } );
-  } catch ( err ) {
-    if(err)
-    {
-      console.error(err);
-    }
+  response.redirect("/expenditure");
+  } );
+} catch ( err ) {
+  if(err)
+  {
+  console.error(err);
   }
+}
 });
 
 module.exports = router;
