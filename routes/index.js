@@ -12,7 +12,7 @@ function makeDb() {
   const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "root",
+    password: "",
     database: "wallygramdb",
   });
   return {
@@ -459,7 +459,7 @@ router.get("/expenditure", function (req, res, next) {
       health_sum = Health[0]['SUM(Amount)'];
       misc_sum = Misc[0]['SUM(Amount)'];
                               
-      res.render("expenditure", {userinfo : result, postcountinfo:result1, friendcountinfo : result2, shopping : shop_sum, food : food_sum, bills : bills_sum, health : health_sum, savings : savings_sum, misc : misc_sum});
+      res.render("expenditure", {userinfo : result, postcountinfo:result1, friendcountinfo : result2, shopping : shop_sum, food : food_sum, bills : bills_sum, health : health_sum, savings : savings_sum, misc : misc_sum, currMonth : currMonth});
 
     } );
   } catch ( err ) {
