@@ -1,21 +1,21 @@
 class Expenditures
 {
-    getMonthlyCategoryWiseExpense(category, month, username)
+    getMonthlyCategoryWiseExpense(db, category, month, username)
     {
-      var sql = `SELECT SUM(Amount) FROM payment WHERE Category = "${category}" AND Payment_month = "${month}" AND Username = "${username}";`;
-      return sql;
+      const result = db.query(`SELECT SUM(Amount) FROM payment WHERE Category = "${category}" AND Payment_month = "${month}" AND Username = "${username}";`);
+      return result;
     }
 
-    getMonthlyLocationWiseExpense(location, month, username)
+    getMonthlyLocationWiseExpense(db, location, month, username)
     {
-      var sql = `SELECT SUM(Amount) FROM wallygramdb.payment WHERE Username = "${username}" AND Payment_month = "${month}" AND paid_to = "${location}";`;
-      return sql;
+      const result = db.query(`SELECT SUM(Amount) FROM wallygramdb.payment WHERE Username = "${username}" AND Payment_month = "${month}" AND paid_to = "${location}";`);
+      return result;
     }
 
-    getMonthlyExpense(month, username)
+    getMonthlyExpense(db, month, username)
     {
-      var sql = `SELECT SUM(Amount) FROM payment WHERE Payment_month = "${month}" AND Username = "${username}";`;
-      return sql;
+      const result = db.query(`SELECT SUM(Amount) FROM payment WHERE Payment_month = "${month}" AND Username = "${username}";`);
+      return result;
     }
 }
 

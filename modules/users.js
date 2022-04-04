@@ -1,21 +1,21 @@
 class User
 {
-    getUserInfo(username)
+    getUserInfo(db, username)
     {
-      var sql = `SELECT * FROM user_table where Username = "${username}";`;
-      return sql;
+      const result = db.query(`SELECT * FROM user_table where Username = "${username}";`);
+      return result;
     }
 
-    addUser(username, name, password)
+    addUser(db, username, name, password)
     {
-      var sql = `INSERT INTO user_table (Username,_Name,_Password) VALUES ("${username}", "${name}", "${password}");`; 
-      return sql;
+      const result = db.query(`INSERT INTO user_table (Username,_Name,_Password) VALUES ("${username}", "${name}", "${password}");`);
+      return result;
     }
 
-    checkLogIn(username, password)
+    checkLogIn(db, username, password)
     {
-      var sql = `SELECT * FROM user_table WHERE Username = "${username}" AND _Password = "${password}";`;
-      return sql;
+      const result = db.query(`SELECT * FROM user_table WHERE Username = "${username}" AND _Password = "${password}";`);
+      return result;
     }
 }
 

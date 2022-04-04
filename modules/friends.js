@@ -1,45 +1,45 @@
 class Friends
 {
-    getFriendCount(username)
+    getFriendCount(db, username)
     {
-      var sql = `SELECT count(friends_username) FROM friends WHERE Username = "${username}";`;
-      return sql;
+      const result = db.query(`SELECT count(friends_username) FROM friends WHERE Username = "${username}";`);
+      return result;
     }
 
-    getFriendRequests(username)
+    getFriendRequests(db, username)
     {
-      var sql = `SELECT * from friends_req WHERE Username = "${username}"`;
-      return sql;
+      const result = db.query(`SELECT * from friends_req WHERE Username = "${username}"`);
+      return result;
     }
 
-    addFriendRequest(username, friendusername, friendname)
+    addFriendRequest(db, username, friendusername, friendname)
     {
-      var sql = `INSERT INTO friends_req (Username, friends_username, FriendName) VALUES ("${username}", "${friendusername}", "${friendname}");`;
-      return sql;
+      const result = db.query(`INSERT INTO friends_req (Username, friends_username, FriendName) VALUES ("${username}", "${friendusername}", "${friendname}");`);
+      return result;
     }
 
-    deleteFriendRequest(username, friendusername)
+    deleteFriendRequest(db, username, friendusername)
     {
-      var sql = `DELETE FROM friends_req WHERE Username = "${username}" and friends_username = "${friendusername}";`;
-      return sql;
+      const result = db.query(`DELETE FROM friends_req WHERE Username = "${username}" and friends_username = "${friendusername}";`);
+      return result;
     }
 
-    getFriends(username)
+    getFriends(db, username)
     {
-      var sql = `SELECT * from friends WHERE Username = "${username}"`;
-      return sql;
+      const result = db.query(`SELECT * from friends WHERE Username = "${username}"`);
+      return result;
     }
 
-    addFriend(username, friendusername)
+    addFriend(db, username, friendusername)
     {
-      var sql = `INSERT INTO friends (Username, friends_username) VALUES ("${username}", "${friendusername}");`;
-      return sql;
+      const result = db.query(`INSERT INTO friends (Username, friends_username) VALUES ("${username}", "${friendusername}");`);
+      return result;
     }
 
-    deleteFriend(username, friendusername)
+    deleteFriend(db, username, friendusername)
     {
-      var sql = `DELETE FROM friends WHERE Username = "${username}" and friends_username = "${friendusername}";`;
-      return sql;
+      const result = db.query(`DELETE FROM friends WHERE Username = "${username}" and friends_username = "${friendusername}";`);
+      return result;
     }
 }
 
