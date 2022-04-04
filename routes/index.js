@@ -132,9 +132,8 @@ router.get("/loginviaimg", function (req, res, next) {
 });
 
 router.get("/profile", function (request, response) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
-  console.log("Hello");
+  var curruser = request.session.uid;
+  console.log(request.session.uid);
   const db = makeDb();
   try {
     withTransaction( db, async () => {
@@ -232,9 +231,9 @@ router.get("/expenseCategory", function (req, res, next) {
 });
 
 router.get("/expenditure", function (req, res, next) {
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
-
+  // var curruser = req.session.uid; 
+  console.log(req.session.uid);
+  
   if(req.query.month == undefined)
   {
     const d = new Date();
