@@ -70,7 +70,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/register", function (req, res, next) {
-  const db = makeDb();
+  const db = index.makeDb();
   try {
     withTransaction( db, async () => {
       const result = await user.addUser(db, req.body.Username, req.body.name, req.body.pswd);
@@ -225,17 +225,6 @@ try {
   console.error(err);
   }
 }
-});
-
-router.get("/share", function (req, res, next) {
-  console.log("share");
-  connection.query(`set insert query`, (error, results, fields) => {
-      if (error) {
-      return console.error(error.message);
-      }
-      console.log("Rows affected:", results.affectedRows);
-      res.redirect("profile", { title: "Express" });
-  });
 });
 
 router.get("/expenseCategory", function (req, res, next) {
