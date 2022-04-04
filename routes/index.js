@@ -16,7 +16,7 @@ function makeDb() {
   const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "root",
     database: "wallygramdb",
   });
   return {
@@ -73,8 +73,7 @@ router.post("/register", function (req, res, next) {
   const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await db.query(user.addUser(req.body.Username, req.body.name, req.body.pswd));
-
+      const result = await user.addUser(db, req.body.Username, req.body.name, req.body.pswd);
       res.redirect("/auth");
     } );
   } catch ( err ) {
@@ -97,7 +96,7 @@ router.post("/auth", function (request, response) {
   if (Username && pswd) {
     try {
       withTransaction( db, async () => {
-        const results = await db.query(user.checkLogIn(Username, pswd));
+        const results = await user.checkLogIn(db, Username, pswd);
 
         if (results.length > 0) {
           console.log(request.session);
@@ -117,6 +116,7 @@ router.post("/auth", function (request, response) {
     } catch ( err ) {
       if(err)
       {
+        console.log(err);
         console.error(err);
       }
     }
@@ -138,12 +138,12 @@ router.get("/profile", function (request, response) {
   const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await db.query( user.getUserInfo("gfg") );
-      const result1 = await db.query( post.getProfilePostCount("gfg") );
-      const result2 = await db.query( post.getProfileComparisonPosts("gfg") );
-      const result3 = await db.query( post.getProfileCategoryPosts("gfg") );
-      const result4 = await db.query( post.getProfileComments("gfg"));
-      const result5 = await db.query( friend.getFriendCount("gfg"));
+      const result = await user.getUserInfo(db, "gfg");
+      const result1 = await post.getProfilePostCount(db, "gfg");
+      const result2 = await post.getProfileComparisonPosts(db, "gfg");
+      const result3 = await post.getProfileCategoryPosts(db, "gfg");
+      const result4 = await post.getProfileComments(db, "gfg");
+      const result5 = await friend.getFriendCount(db, "gfg");
 
       response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, catpostinfo : result3, comments : result4, friendcountinfo : result5 });
     } );
@@ -160,7 +160,7 @@ router.get("/like", function (request, response) {
   const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await db.query(post.updateLikes(request.query.id));
+      const result = await post.updateLikes(db, request.query.id);
       response.redirect('/profile');
     } );
   } catch ( err ) {
@@ -176,7 +176,7 @@ router.get("/likefeed", function (request, response) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(post.updateLikes(request.query.id));
+  const result = await post.updateLikes(db, request.query.id);
   response.redirect('/feed');
   } );
 } catch ( err ) {
@@ -194,8 +194,8 @@ router.post("/comment", function (request, response, next) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(post.updateCommentCount(request.body.postid));
-  const result1 = await db.query(post.insertComment(request.body.postid, "gfg", request.body.comment));
+  const result = await post.updateCommentCount(db, request.body.postid);
+  const result1 = await post.insertComment(db, request.body.postid, "gfg", request.body.comment);
 
   response.redirect("/profile");
   } );
@@ -214,8 +214,8 @@ router.post("/commentfeed", function (request, response, next) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(post.updateCommentCount(request.body.postid));
-  const result1 = await db.query(post.insertComment(request.body.postid, "gfg", request.body.comment));
+  const result = await post.updateCommentCount(db, request.body.postid);
+  const result1 = await post.insertComment(db, request.body.postid, "gfg", request.body.comment);
 
   response.redirect("/feed");
   } );
@@ -259,15 +259,15 @@ router.get("/expenditure", function (req, res, next) {
   const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await db.query(user.getUserInfo("gfg"));
-      const result1 = await db.query(post.getProfilePostCount("gfg"));
-      const result2 = await db.query(friend.getFriendCount("gfg"));
-      const Shopping = await db.query(expenditure.getMonthlyCategoryWiseExpense("Shopping", currMonth, "gfg"));
-      const Food = await db.query(expenditure.getMonthlyCategoryWiseExpense("Food", currMonth, "gfg"));
-      const Bills = await db.query(expenditure.getMonthlyCategoryWiseExpense("Bills", currMonth, "gfg"));
-      const Savings = await db.query(expenditure.getMonthlyCategoryWiseExpense("Savings", currMonth, "gfg"));
-      const Health = await db.query(expenditure.getMonthlyCategoryWiseExpense("Health", currMonth, "gfg"));
-      const Misc = await db.query(expenditure.getMonthlyCategoryWiseExpense("Misc", currMonth, "gfg"));
+      const result = await user.getUserInfo(db, "gfg");
+      const result1 = await post.getProfilePostCount(db, "gfg");
+      const result2 = await friend.getFriendCount(db, "gfg");
+      const Shopping = await expenditure.getMonthlyCategoryWiseExpense(db, "Shopping", currMonth, "gfg");
+      const Food = await expenditure.getMonthlyCategoryWiseExpense(db, "Food", currMonth, "gfg");
+      const Bills = await expenditure.getMonthlyCategoryWiseExpense(db, "Bills", currMonth, "gfg");
+      const Savings = await expenditure.getMonthlyCategoryWiseExpense(db, "Savings", currMonth, "gfg");
+      const Health = await expenditure.getMonthlyCategoryWiseExpense(db, "Health", currMonth, "gfg");
+      const Misc = await expenditure.getMonthlyCategoryWiseExpense(db, "Misc", currMonth, "gfg");
 
       shop_sum = Shopping[0]['SUM(Amount)'];
       food_sum = Food[0]['SUM(Amount)'];
@@ -295,7 +295,7 @@ router.get("/friendsRequested", function (req, res, next) {
   const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await db.query(friend.getFriendRequests("gfg"));
+      const result = await friend.getFriendRequests(db, "gfg");
 
       res.render("friends_requested", { friend: result });
     } );
@@ -315,7 +315,7 @@ console.log("friendsAccepted");
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(friend.getFriends("gfg"));
+  const result = await friend.getFriends(db, "gfg");
 
   res.render("friends_accepted", { friend: result });
   } );
@@ -334,7 +334,7 @@ router.get("/removeFriend", function (req, res, next) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(friend.deleteFriend("gfg", req.query.id));
+  const result = await friend.deleteFriend(db, "gfg", req.query.id);
 
   res.redirect("/friendsAccepted");
   } );
@@ -353,8 +353,8 @@ router.get("/acceptFriendRequest", function (req, res, next) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(friend.addFriend("gfg", req.query.id));
-  const result1 = await db.query(friend.deleteFriendRequest("gfg", req.query.id));
+  const result = await friend.addFriend(db, "gfg", req.query.id);
+  const result1 = await friend.deleteFriendRequest(db, "gfg", req.query.id);
 
   res.redirect("/friendsRequested");
   } );
@@ -373,7 +373,7 @@ router.get("/deleteFriendRequest", function (req, res, next) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(friend.deleteFriendRequest("gfg", req.query.id));
+  const result = await friend.deleteFriendRequest(db, "gfg", req.query.id);
 
   res.redirect("/friendsRequested");
   } );
@@ -390,7 +390,7 @@ router.post("/searchfriends", function (request, response, next) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(user.getUserInfo(request.body.findingfriend));
+  const result = await user.getUserInfo(db, request.body.findingfriend);
 
   response.render("searchfriends", {findfriend : result});
   } );
@@ -409,8 +409,8 @@ router.get("/addfriend", function (request, response) {
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const result = await db.query(user.getUserInfo(request.query.id));
-  const result1 = await db.query(friend.addFriendRequest("gfg", request.query.id, result[0]._Name));
+  const result = await user.getUserInfo(db, request.query.id);
+  const result1 = await friend.addFriendRequest(db, "gfg", request.query.id, result[0]._Name);
 
   response.redirect('/profile');
   } );
@@ -430,9 +430,9 @@ router.get("/feed", function (req, res, next) {
   const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await db.query(post.getFeedComparisonPosts("gfg"));
-      const result1 = await db.query(post.getFeedCategoryPosts("gfg"));
-      const result2 = await db.query(post.getFeedComments("gfg"));
+      const result = await post.getFeedComparisonPosts(db, "gfg");
+      const result1 = await post.getFeedCategoryPosts(db, "gfg");
+      const result2 = await post.getFeedComments(db, "gfg");
 
       res.render("feed", { post: result, catpostinfo : result1, comments: result2 });
     } );
@@ -452,18 +452,18 @@ var postid = 0;
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const resultcount = await db.query(post.getPostCount());
+  const resultcount = await post.getPostCount(db);
   postid = resultcount[0]['count(Post_id)'] + 1;
 
-  const month1_cat_sum = await db.query(expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month1, "gfg"));
-  const month2_cat_sum = await db.query(expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month2, "gfg"));
-  const month1_sum = await db.query(expenditure.getMonthlyExpense(request.body.month1, "gfg"));
-  const month2_sum = await db.query(expenditure.getMonthlyExpense(request.body.month2, "gfg"));
+  const month1_cat_sum = await expenditure.getMonthlyCategoryWiseExpense(db, request.body.Category, request.body.month1, "gfg");
+  const month2_cat_sum = await expenditure.getMonthlyCategoryWiseExpense(db, request.body.Category, request.body.month2, "gfg");
+  const month1_sum = await expenditure.getMonthlyExpense(db, request.body.month1, "gfg");
+  const month2_sum = await expenditure.getMonthlyExpense(db, request.body.month2, "gfg");
   percent1 = (month1_cat_sum[0]['SUM(Amount)'] / month1_sum[0]['SUM(Amount)'] ) * 100;
   percent2 = (month2_cat_sum[0]['SUM(Amount)'] / month2_sum[0]['SUM(Amount)'] ) * 100;
 
-  const result1 = await db.query(post.addPost(postid, "gfg", request.body.caption));
-  const result2 = await db.query(post.addComparisonPost(postid, request.body.month1, request.body.month2, request.body.Category, percent1, percent2));
+  const result1 = await post.addPost(db, postid, "gfg", request.body.caption);
+  const result2 = await post.addComparisonPost(db, postid, request.body.month1, request.body.month2, request.body.Category, percent1, percent2);
 
   response.redirect("/expenditure");
   } );
@@ -483,13 +483,13 @@ var postid = 0;
 const db = makeDb();
 try {
   withTransaction( db, async () => {
-  const resultcount = await db.query(post.getPostCount());
+  const resultcount = await post.getPostCount(db);
   postid = resultcount[0]['count(Post_id)'] + 1;
 
-  const cost = await db.query(expenditure.getMonthlyLocationWiseExpense(request.body.paidto, request.body.month, "gfg"));
+  const cost = await expenditure.getMonthlyLocationWiseExpense(db, request.body.paidto, request.body.month, "gfg");
 
-  const result = await db.query(post.addPost(postid, "gfg", request.body.caption));
-  const result1 = await db.query(post.addCategoryPost(postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month));
+  const result = await post.addPost(db, postid, "gfg", request.body.caption);
+  const result1 = await post.addCategoryPost(db, postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month);
 
   response.redirect("/expenditure");
   } );
