@@ -510,8 +510,14 @@ router.post("/comparisonpost", function (request, response, next) {
     const month2_cat_sum = await expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month2);
     const month1_sum = await expenditure.getMonthlyExpense(request.body.month1);
     const month2_sum = await expenditure.getMonthlyExpense(request.body.month2);
+
+    percent1 = 0;
+    percent2 = 0;
     percent1 = (month1_cat_sum[0]['SUM(Amount)'] / month1_sum[0]['SUM(Amount)'] ) * 100;
     percent2 = (month2_cat_sum[0]['SUM(Amount)'] / month2_sum[0]['SUM(Amount)'] ) * 100;
+
+    console.log(percent1);
+    console.log(percent2);
 
     const result1 = await post.addPost(postid, request.body.caption);
     const result2 = await post.addComparisonPost(postid, request.body.month1, request.body.month2, request.body.Category, percent1, percent2);
@@ -545,7 +551,7 @@ router.post("/categorypost", function (request, response, next) {
     const cost = await expenditure.getMonthlyLocationWiseExpense(request.body.paidto, request.body.month);
 
     const result = await post.addPost(postid, request.body.caption);
-    const result1 = await post.addCategoryPost(db, postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month);
+    const result1 = await post.addCategoryPost(postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month);
 
     response.redirect("/expenditure");
     } );
