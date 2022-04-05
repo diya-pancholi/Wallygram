@@ -26,7 +26,7 @@ class Friends
 
     deleteFriendRequest(friendusername)
     {
-      const result = (this.db).query(`DELETE FROM friends_req WHERE Username = "${this.username}" and friends_username = "${friendusername}";`);
+      const result = (this.db).query(`DELETE FROM friends_req WHERE friends_username = "${this.username}" and Username = "${friendusername}";`);
       return result;
     }
 
