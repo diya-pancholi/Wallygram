@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense_category</title>
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css"
+    />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="container">
+        <h2 class="log">Wallygram</h2>
+        <div class="search-bar">
+          <form action="/searchfriends" method="POST" name="form3" class="d-flex flex-row">
+              <input type="submit" class="uil uil-search" value="GO" class="go"/>
+              <input type="text" placeholder="Search for your friends, inspirations and influencers" name="findingfriend" id="findingfriend" class="ffriend">
+          </form> 
+      </div>
+        <div class="home" a href="/feed">
+          <i class="uil uil-house-user"></i>
+        </div>
+        <div class="friends" a href="location.href='/friendsAccepted">
+          <i class="uil uil-heart"></i>
+        </div>
+        <div class="Profile" a href="/profile">
+          <i class="uil uil-user"></i>
+        </div>
+        <div class="Profile-picture">
+          <img src="/public/images/PP1.jpg" />
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container">
+        <p class="log2">Category: Food</p>
+        <br />
+        <table class="table2">
+          <div class="T-heading">
+            <tr>
+              <th class="h_with_border">Transaction Id</th>
+              <th class="h_with_border">Paid To</th>
+              <th class="h_with_border">Amount</th>
+              <th class="h_with_border"></th>
+            </tr>
+          </div>
+          <% for (var i =0; i < transaction.length; i++ ) { %>
+          <tr>
+            <td class="with_border"><%= transaction[i].transactionId %></td>
+            <td class="with_border"><%= transaction[i].receiver %></td>
+            <td class="with_border"><%= transaction[i].amount %></td>
+            <td class="with_border">
+              <div class="share">
+                <i class="uil uil-share"></i>
+              </div>
+            </td>
+          </tr>
+          <% } %>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

@@ -38,25 +38,25 @@ class Posts
 
     getProfileCategoryPosts()
     {
-      const result = (this.db).query(`SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username = "${this.username}";`);
+      const result = (this.db).query(`SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username = "${this.username}" ORDER BY POST_DT;`);
       return result;
     }
 
     getProfileComparisonPosts()
     {
-      const result = (this.db).query(`SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "${this.username}";`);
+      const result = (this.db).query(`SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username = "${this.username}" ORDER BY POST_DT;`);
       return result;
     }
 
     getFeedCategoryPosts()
     {
-      const result = (this.db).query(`SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}") ;`);
+      const result = (this.db).query(`SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}") ORDER BY POST_DT ;`);
       return result;
     }
 
     getFeedComparisonPosts()
     {
-      const result = (this.db).query(`SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}");`);
+      const result = (this.db).query(`SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}") ORDER BY POST_DT;`);
       return result;
     }
 
@@ -68,7 +68,7 @@ class Posts
 
     getFeedComments()
     {
-      const result = (this.db).query(`SELECT * FROM comments;`);
+      const result = (this.db).query(`SELECT * FROM comments INNER JOIN posts ON posts.Post_id=comments.post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}");`);
       return result;
     }
 
