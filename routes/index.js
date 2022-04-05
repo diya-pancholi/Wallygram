@@ -59,10 +59,6 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
-const user = new User();
-const post = new Posts();
-const friend = new Friends();
-const expenditure = new Expenditures();
 
 router.get("/", function (req, res, next) {
   console.log("hi");
@@ -70,10 +66,14 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/register", function (req, res, next) {
-  const db = index.makeDb();
+
+  const db = makeDb();
+
+  const user = new User(db, req.body.Username);
+
   try {
     withTransaction( db, async () => {
-      const result = await user.addUser(db, req.body.Username, req.body.name, req.body.pswd);
+      const result = await user.addUser(req.body.name, req.body.pswd);
       res.redirect("/auth");
     } );
   } catch ( err ) {
@@ -91,21 +91,21 @@ router.get("/registerviaimg", function (req, res, next) {
 router.post("/auth", function (request, response) {
   var Username = request.body.Username;
   var pswd = request.body.pswd;
+
   const db = makeDb();
+
+  const user = new User(db, Username);
 
   if (Username && pswd) {
     try {
       withTransaction( db, async () => {
-        const results = await user.checkLogIn(db, Username, pswd);
+        const results = await user.checkLogIn(pswd);
 
         if (results.length > 0) {
           console.log(request.session);
           request.session.loggedin = true;
           request.session.uid = results[0].Username;
           console.log(request.session.uid);
-          // request.session.regenerate(function(err) {
-          //   request.session = {};
-          // })
           response.redirect("/profile");
         } else {
           response.send("Incorrect Username and/or Pswd!");
@@ -134,15 +134,21 @@ router.get("/loginviaimg", function (req, res, next) {
 router.get("/profile", function (request, response) {
   var curruser = request.session.uid;
   console.log(request.session.uid);
+
   const db = makeDb();
+
+  const user = new User(db, curruser);
+  const friend = new Friends(db, curruser);
+  const post = new Posts(db, curruser);
+
   try {
     withTransaction( db, async () => {
-      const result = await user.getUserInfo(db, "gfg");
-      const result1 = await post.getProfilePostCount(db, "gfg");
-      const result2 = await post.getProfileComparisonPosts(db, "gfg");
-      const result3 = await post.getProfileCategoryPosts(db, "gfg");
-      const result4 = await post.getProfileComments(db, "gfg");
-      const result5 = await friend.getFriendCount(db, "gfg");
+      const result = await user.getUserInfo();
+      const result1 = await post.getProfilePostCount();
+      const result2 = await post.getProfileComparisonPosts();
+      const result3 = await post.getProfileCategoryPosts();
+      const result4 = await post.getProfileComments();
+      const result5 = await friend.getFriendCount();
 
       response.render("profile", { userinfo: result, postcountinfo: result1, postinfo : result2, catpostinfo : result3, comments : result4, friendcountinfo : result5 });
     } );
@@ -157,9 +163,12 @@ router.get("/profile", function (request, response) {
 router.get("/like", function (request, response) {
 
   const db = makeDb();
+
+  const post = new Posts(db, "");
+
   try {
     withTransaction( db, async () => {
-      const result = await post.updateLikes(db, request.query.id);
+      const result = await post.updateLikes(request.query.id);
       response.redirect('/profile');
     } );
   } catch ( err ) {
@@ -172,67 +181,79 @@ router.get("/like", function (request, response) {
 
 router.get("/likefeed", function (request, response) {
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await post.updateLikes(db, request.query.id);
-  response.redirect('/feed');
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const db = makeDb();
+
+  const post = new Posts(db, "");
+
+  try {
+    withTransaction( db, async () => {
+    const result = await post.updateLikes(request.query.id);
+    response.redirect('/feed');
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.post("/comment", function (request, response, next) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
+  var curruser = request.session.uid;
+  console.log(request.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await post.updateCommentCount(db, request.body.postid);
-  const result1 = await post.insertComment(db, request.body.postid, "gfg", request.body.comment);
+  const db = makeDb();
 
-  response.redirect("/profile");
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const post = new Posts(db, curruser);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await post.updateCommentCount(request.body.postid);
+    const result1 = await post.insertComment(request.body.postid, request.body.comment);
+
+    response.redirect("/profile");
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.post("/commentfeed", function (request, response, next) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
+  var curruser = request.session.uid;
+  console.log(request.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await post.updateCommentCount(db, request.body.postid);
-  const result1 = await post.insertComment(db, request.body.postid, "gfg", request.body.comment);
+  const db = makeDb();
 
-  response.redirect("/feed");
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const post = new Posts(db, curruser);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await post.updateCommentCount(request.body.postid);
+    const result1 = await post.insertComment(request.body.postid, request.body.comment);
+
+    response.redirect("/feed");
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
-});
-
-router.get("/expenseCategory", function (req, res, next) {
-  res.render("expense_category", { title: "Express" });
 });
 
 router.get("/expenditure", function (req, res, next) {
-  // var curruser = req.session.uid; 
+  var curruser = req.session.uid; 
   console.log(req.session.uid);
+
+  const db = makeDb();
+
+  const user = new User(db, curruser);
+  const friend = new Friends(db, curruser);
+  const post = new Posts(db, curruser);
+  const expenditure = new Expenditures(db, curruser);
   
   if(req.query.month == undefined)
   {
@@ -244,18 +265,17 @@ router.get("/expenditure", function (req, res, next) {
     var currMonth = req.query.month;
   }
 
-  const db = makeDb();
   try {
     withTransaction( db, async () => {
-      const result = await user.getUserInfo(db, "gfg");
-      const result1 = await post.getProfilePostCount(db, "gfg");
-      const result2 = await friend.getFriendCount(db, "gfg");
-      const Shopping = await expenditure.getMonthlyCategoryWiseExpense(db, "Shopping", currMonth, "gfg");
-      const Food = await expenditure.getMonthlyCategoryWiseExpense(db, "Food", currMonth, "gfg");
-      const Bills = await expenditure.getMonthlyCategoryWiseExpense(db, "Bills", currMonth, "gfg");
-      const Savings = await expenditure.getMonthlyCategoryWiseExpense(db, "Savings", currMonth, "gfg");
-      const Health = await expenditure.getMonthlyCategoryWiseExpense(db, "Health", currMonth, "gfg");
-      const Misc = await expenditure.getMonthlyCategoryWiseExpense(db, "Misc", currMonth, "gfg");
+      const result = await user.getUserInfo();
+      const result1 = await post.getProfilePostCount();
+      const result2 = await friend.getFriendCount();
+      const Shopping = await expenditure.getMonthlyCategoryWiseExpense("Shopping", currMonth);
+      const Food = await expenditure.getMonthlyCategoryWiseExpense("Food", currMonth);
+      const Bills = await expenditure.getMonthlyCategoryWiseExpense("Bills", currMonth);
+      const Savings = await expenditure.getMonthlyCategoryWiseExpense("Savings", currMonth);
+      const Health = await expenditure.getMonthlyCategoryWiseExpense("Health", currMonth);
+      const Misc = await expenditure.getMonthlyCategoryWiseExpense("Misc", currMonth);
 
       shop_sum = Shopping[0]['SUM(Amount)'];
       food_sum = Food[0]['SUM(Amount)'];
@@ -277,13 +297,16 @@ router.get("/expenditure", function (req, res, next) {
 
 router.get("/friendsRequested", function (req, res, next) {
   console.log("friendsRequested");
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+  var curruser = req.session.uid;
+  console.log(req.session.uid);
 
   const db = makeDb();
+
+  const friend = new Friends(db, curruser);
+
   try {
     withTransaction( db, async () => {
-      const result = await friend.getFriendRequests(db, "gfg");
+      const result = await friend.getFriendRequests();
 
       res.render("friends_requested", { friend: result });
     } );
@@ -296,131 +319,152 @@ router.get("/friendsRequested", function (req, res, next) {
 });
 
 router.get("/friendsAccepted", function (req, res, next) {
-console.log("friendsAccepted");
-// var user = request.session.uid;
-// console.log(request.session.uid);
+  console.log("friendsAccepted");
+  var curruser = req.session.uid;
+  console.log(req.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await friend.getFriends(db, "gfg");
+  const db = makeDb();
 
-  res.render("friends_accepted", { friend: result });
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const friend = new Friends(db, curruser);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await friend.getFriends();
+
+    res.render("friends_accepted", { friend: result });
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.get("/removeFriend", function (req, res, next) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
+  var curruser = req.session.uid;
+  console.log(req.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await friend.deleteFriend(db, "gfg", req.query.id);
+  const db = makeDb();
 
-  res.redirect("/friendsAccepted");
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const friend = new Friends(db, curruser);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await friend.deleteFriend(req.query.id);
+
+    res.redirect("/friendsAccepted");
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.get("/acceptFriendRequest", function (req, res, next) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
+  var curruser = req.session.uid;
+  console.log(req.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await friend.addFriend(db, "gfg", req.query.id);
-  const result1 = await friend.deleteFriendRequest(db, "gfg", req.query.id);
+  const db = makeDb();
 
-  res.redirect("/friendsRequested");
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const friend = new Friends(db, curruser);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await friend.addFriend(req.query.id);
+    const result1 = await friend.deleteFriendRequest(req.query.id);
+
+    res.redirect("/friendsRequested");
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.get("/deleteFriendRequest", function (req, res, next) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
+  var curruser = req.session.uid;
+  console.log(req.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await friend.deleteFriendRequest(db, "gfg", req.query.id);
+  const db = makeDb();
 
-  res.redirect("/friendsRequested");
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const friend = new Friends(db, curruser);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await friend.deleteFriendRequest(req.query.id);
+
+    res.redirect("/friendsRequested");
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.post("/searchfriends", function (request, response, next) {
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await user.getUserInfo(db, request.body.findingfriend);
+  const db = makeDb();
 
-  response.render("searchfriends", {findfriend : result});
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const user = new User(db, request.body.findingfriend);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await user.getUserInfo();
+
+    response.render("searchfriends", {findfriend : result});
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.get("/addfriend", function (request, response) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
+  var curruser = request.session.uid;
+  console.log(request.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const result = await user.getUserInfo(db, request.query.id);
-  const result1 = await friend.addFriendRequest(db, "gfg", request.query.id, result[0]._Name);
+  const db = makeDb();
 
-  response.redirect('/profile');
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  const friend = new Friends(db, curruser);
+  const user = new User(db, request.query.id);
+
+  try {
+    withTransaction( db, async () => {
+    const result = await user.getUserInfo();
+    const result1 = await friend.addFriendRequest(request.query.id, result[0]._Name);
+
+    response.redirect('/profile');
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.get("/feed", function (req, res, next) {
   console.log("feed");
-  // var user = request.session.uid;
-  // console.log(request.session.uid);
+  var curruser = req.session.uid;
 
   const db = makeDb();
+
+  const post = new Posts(db, curruser);
+
   try {
     withTransaction( db, async () => {
-      const result = await post.getFeedComparisonPosts(db, "gfg");
-      const result1 = await post.getFeedCategoryPosts(db, "gfg");
-      const result2 = await post.getFeedComments(db, "gfg");
+      const result = await post.getFeedComparisonPosts();
+      const result1 = await post.getFeedCategoryPosts();
+      const result2 = await post.getFeedComments();
 
       res.render("feed", { post: result, catpostinfo : result1, comments: result2 });
     } );
@@ -433,60 +477,70 @@ router.get("/feed", function (req, res, next) {
 });
 
 router.post("/comparisonpost", function (request, response, next) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
-var postid = 0;
+  var curruser = request.session.uid;
+  console.log(request.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const resultcount = await post.getPostCount(db);
-  postid = resultcount[0]['count(Post_id)'] + 1;
+  const db = makeDb();
 
-  const month1_cat_sum = await expenditure.getMonthlyCategoryWiseExpense(db, request.body.Category, request.body.month1, "gfg");
-  const month2_cat_sum = await expenditure.getMonthlyCategoryWiseExpense(db, request.body.Category, request.body.month2, "gfg");
-  const month1_sum = await expenditure.getMonthlyExpense(db, request.body.month1, "gfg");
-  const month2_sum = await expenditure.getMonthlyExpense(db, request.body.month2, "gfg");
-  percent1 = (month1_cat_sum[0]['SUM(Amount)'] / month1_sum[0]['SUM(Amount)'] ) * 100;
-  percent2 = (month2_cat_sum[0]['SUM(Amount)'] / month2_sum[0]['SUM(Amount)'] ) * 100;
+  const post = new Posts(db, curruser);
+  const expenditure = new Expenditures(db, curruser);
 
-  const result1 = await post.addPost(db, postid, "gfg", request.body.caption);
-  const result2 = await post.addComparisonPost(db, postid, request.body.month1, request.body.month2, request.body.Category, percent1, percent2);
+  var postid = 0;
 
-  response.redirect("/expenditure");
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  try {
+    withTransaction( db, async () => {
+    const resultcount = await post.getPostCount();
+    postid = resultcount[0]['count(Post_id)'] + 1;
+
+    const month1_cat_sum = await expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month1);
+    const month2_cat_sum = await expenditure.getMonthlyCategoryWiseExpense(request.body.Category, request.body.month2);
+    const month1_sum = await expenditure.getMonthlyExpense(request.body.month1);
+    const month2_sum = await expenditure.getMonthlyExpense(request.body.month2);
+    percent1 = (month1_cat_sum[0]['SUM(Amount)'] / month1_sum[0]['SUM(Amount)'] ) * 100;
+    percent2 = (month2_cat_sum[0]['SUM(Amount)'] / month2_sum[0]['SUM(Amount)'] ) * 100;
+
+    const result1 = await post.addPost(postid, request.body.caption);
+    const result2 = await post.addComparisonPost(postid, request.body.month1, request.body.month2, request.body.Category, percent1, percent2);
+
+    response.redirect("/expenditure");
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 router.post("/categorypost", function (request, response, next) {
-// var user = request.session.uid;
-// console.log(request.session.uid);
-var postid = 0;
+  var curruser = request.session.uid;
+  console.log(request.session.uid);
 
-const db = makeDb();
-try {
-  withTransaction( db, async () => {
-  const resultcount = await post.getPostCount(db);
-  postid = resultcount[0]['count(Post_id)'] + 1;
+  const db = makeDb();
 
-  const cost = await expenditure.getMonthlyLocationWiseExpense(db, request.body.paidto, request.body.month, "gfg");
+  const post = new Posts(db, curruser);
+  const expenditure = new Expenditures(db, curruser);
 
-  const result = await post.addPost(db, postid, "gfg", request.body.caption);
-  const result1 = await post.addCategoryPost(db, postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month);
+  var postid = 0;
 
-  response.redirect("/expenditure");
-  } );
-} catch ( err ) {
-  if(err)
-  {
-  console.error(err);
+  try {
+    withTransaction( db, async () => {
+    const resultcount = await post.getPostCount();
+    postid = resultcount[0]['count(Post_id)'] + 1;
+
+    const cost = await expenditure.getMonthlyLocationWiseExpense(request.body.paidto, request.body.month);
+
+    const result = await post.addPost(postid, request.body.caption);
+    const result1 = await post.addCategoryPost(db, postid, request.body.Category, cost[0]['SUM(Amount)'], request.body.month);
+
+    response.redirect("/expenditure");
+    } );
+  } catch ( err ) {
+    if(err)
+    {
+    console.error(err);
+    }
   }
-}
 });
 
 module.exports = router;
