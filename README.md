@@ -18,4 +18,4 @@ An expenditure management and expense sharing platform among friends, combining 
 
 ## Snippets
 
-> Will add once screenshots of UI are merged in main.
+![Wallygram](public/images/signup.PNG)
