@@ -370,10 +370,12 @@ router.get("/acceptFriendRequest", function (req, res, next) {
   const db = makeDb();
 
   const friend = new Friends(db, curruser);
+  const frienduser = new Friends(db, req.query.id);
 
   try {
     withTransaction( db, async () => {
     const result = await friend.addFriend(req.query.id);
+    const results = await frienduser.addFriend(curruser);
     const result1 = await friend.deleteFriendRequest(req.query.id);
 
     res.redirect("/friendsRequested");
