@@ -50,13 +50,13 @@ class Posts
 
     getFeedCategoryPosts()
     {
-      const result = (this.db).query(`SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username <> "${this.username}";`);
+      const result = (this.db).query(`SELECT * FROM posts INNER JOIN category_type ON posts.Post_id = category_type.Post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}") ;`);
       return result;
     }
 
     getFeedComparisonPosts()
     {
-      const result = (this.db).query(`SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username <> "${this.username}";`);
+      const result = (this.db).query(`SELECT * FROM posts INNER JOIN comparison_type ON posts.Post_id = comparison_type.Post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}");`);
       return result;
     }
 
