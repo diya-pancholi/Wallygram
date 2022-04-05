@@ -8,7 +8,13 @@ class User
 
     getUserInfo()
     {
-      const result = (this.db).query(`SELECT * FROM user_table where Username = "${this.username}";`);
+      const result = (this.db).query(`SELECT * FROM user_table WHERE Username = "${this.username}";`);
+      return result;
+    }
+
+    getSearchedUserInfo(user)
+    {
+      const result = (this.db).query(`SELECT * FROM user_table WHERE Username = "${user}" AND Username NOT IN (SELECT friends_username FROM friends WHERE Username = "${this.username}");`);
       return result;
     }
 
