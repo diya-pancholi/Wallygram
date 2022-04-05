@@ -3,11 +3,11 @@
 > An expenditure management and expense sharing platform among friends, combining social media with wallet analysis.
 
 ## Contributors
-Anushka Srivastava
-Shruti Sharma
-Gyanvi
-Diya Pancholi
-Siddam Shetty Sahithi Shresta
+> Anushka Srivastava
+> Shruti Sharma
+> Gyanvi
+> Diya Pancholi
+> Siddam Shetty Sahithi Shresta
 
 ## Running
 
