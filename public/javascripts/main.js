@@ -26,6 +26,10 @@ function dropdownCatFunction() {
     document.getElementById("Category").classList.toggle("show");
 }
 
+function dropdownCat2Function() {
+  document.getElementById("Categories").classList.toggle("show");
+}
+
 window.onclick = function(event) {
     if (!event.target.matches('.dropbtn')) {
       var dropdowns = document.getElementsByClassName("dropdown-content");
