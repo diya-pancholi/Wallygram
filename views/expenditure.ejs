@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Expenditure Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css"
+    />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cookie&family=Dancing+Script:wght@700&family=Great+Vibes&family=Permanent+Marker&family=Redressed&family=Sacramento&family=Satisfy&display=swap");
+    </style>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <nav>
+      <div class="container">
+        <h2 class="log app-name">Wallygram</h2>
+        <div class="search-bar">
+          <form action="/searchfriends" method="POST" name="form3" class="d-flex flex-row">
+              <input type="submit" class="uil uil-search" value="GO" class="go"/>
+              <input type="text" placeholder="Search for your friends, inspirations and influencers" name="findingfriend" id="findingfriend" class="ffriend">
+          </form> 
+      </div>
+        <div class="home" onclick="location.href='/feed'">
+          <i class="uil uil-house-user"></i>
+        </div>
+        <div class="friends" onclick="location.href='/friendsRequested'">
+          <i class="uil uil-heart"></i>
+        </div>
+        <div class="Profile" onclick="location.href='/profile'">
+          <i class="uil uil-user"></i>
+        </div>
+        <div class="Profile-picture">
+          <img src="/images/PP1.jpg" />
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container"> 
+
+
+
+        <table>
+            <tr>
+                <td>
+                    <div class="profile-pic">
+                        <img src="/images/PP1.jpg">
+                    </div>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>
+                                          <i class="uil uil-user"></i>
+                                        </td>
+                                        <td>
+                                            <div class="username">
+                                                <%= userinfo[0].Username %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div class="num-of-posts">
+                                                <%= postcountinfo[0]['count(Post_id)'] %> posts
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="num-of-friends">
+                                                <%= friendcountinfo[0]['count(friends_username)'] %> friends
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="caption">
+                                            <%= userinfo[0].Bio %>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <hr>
+        <div class="container">
+        <table >
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <div class="posts">
+                        <button class="button2 post_button" onclick="location.href='/profile'" style="background-color: pink" onclick="showposts()" type="button">POSTS</button>
+                    </div>
+                </td>
+                <td>
+                    <div class="expenditure">
+                        <button class="button2 expenditure_button" onclick="location.href='/expenditure'" type="button">EXPENDITURE</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+      <div class="categories">
+          <img src="/images/caption.PNG">
+      </div>
+      <div class="chartCard">
+          <div class="chartBox">
+              <canvas id="myChart" class="canvasDesign"></canvas>
+              <div class="month">
+                  <div class="button3" type="button"><%= currMonth %> 2022</div>
+              </div>
+          </div>
+      </div>
+    <script>
+    let shop = '<%-shopping%>'
+    let food = '<%-food%>'
+    let bills = '<%-bills%>'
+    let health = '<%-health%>'
+    let savings = '<%-savings%>'
+    let misc = '<%-misc%>';
+    const data1 = {
+        labels: [
+          'Shopping',
+          'Food',
+          'Bills',
+          'Savings',
+          'Health',
+          'Misc'
+        ],
+        datasets: [{
+          label: 'First Pie chart',
+          data: [
+              { financials: 'Shopping', url: '/Expense_category.html', amount: { usd: shop}},
+              { financials: 'Food', url: '/Expense_category.html', amount: { usd: food }},
+              { financials: 'Bills', url: '/Expense_category.html', amount: { usd: bills }},
+              { financials: 'Savings', url: '/Expense_category.html', amount: { usd: savings }},
+              { financials: 'Health', url: '/Expense_category.html', amount: { usd: health }},
+              { financials: 'Misc', url: '/Expense_category.html', amount: { usd: misc }},
+          ],
+          backgroundColor: [
+            'rgb(100, 255, 100)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(255, 99, 132)',
+            'rgb(160, 160, 160)',
+            'rgb(255, 0, 127)',
+          ],
+          hoverOffset: 4
+        }]
+      };
+    const config = {
+        type: 'doughnut',
+        data: data1,
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            parsing: {
+               key: 'amount.usd'
+            }
+        }
+      };
+
+    const ctx = document.getElementById('myChart');
+    const myChart = new Chart(
+      ctx,
+      config
+    );
+
+    function pieLink(click){
+        const clickedInfo = myChart.getElementsAtEventForMode(click, 'nearest', { intersect: true }, true);
+        if (clickedInfo.length) {
+          const pieSlice = clickedInfo[0];
+          console.log(pieSlice.datasetIndex);
+          console.log(pieSlice.index);
+          const link = myChart.data.datasets[pieSlice.datasetIndex].data[pieSlice.index].url;
+          window.open(link);
+        }
+    }
+    ctx.onclick = pieLink;
+    </script>
+
+    <div class="my-expenditure">  
+      <form action="/expenditure" method="GET" name="expmonthform">
+        <div class ="category-option-row d-flex flex-row">
+          <select name="month" id="month" class="dropbtn">
+            <option> Month</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+        </div>                
+        <div class = "show-button-header-category">
+          <input type="submit" value="Show" class="button1" />
+        </div>
+      </form>
+    </div>
+
+    <div class="my-expenditure">
+      <div class = "create-post-header">
+          <h3 class="create-post-title">Create Post (Comparison Type)</h3>
+      </div>
+      <form action="/comparisonpost" method="POST" name="compform">
+        <div class ="camparison-option-row d-flex flex-row">
+          <select name="month1" id="month1" class="dropbtn">
+            <option> Month 1 </option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+          <select name="month2" id="month2" class="dropbtn">
+            <option> Month 2 </option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+          <select name="Category" id="Category" class="dropbtn">
+            <option> Category </option>
+            <option value="Shopping">Shopping</option>
+            <option value="Food">Food</option>
+            <option value="Bill">Bill</option>
+            <option value="Savings">Savings</option>
+            <option value="Health">Health</option>
+            <option value="Misc">Misc</option>
+          </select>
+        </div>
+        <input class="add-caption" type="text" placeholder="Add Caption...." name="caption" id="caption">
+              
+        <div class = "post-button-header">
+          <input type="submit" value="Post" class="button1" />
+        </div>
+    </form>
+  </div>
+  <div class="my-expenditure">
+    <div class = "create-post-header">
+        <h3 class="create-post-title">Create Post (Category Type)</h3>
+    </div>
+    <form action="/categorypost" method="POST" name="compform">
+      <div class ="category-option-row d-flex flex-row">
+        <select name="month" id="month" class="dropbtn">
+          <option> Month</option>
+          <option value="January">January</option>
+          <option value="February">February</option>
+          <option value="March">March</option>
+          <option value="April">April</option>
+          <option value="May">May</option>
+          <option value="June">June</option>
+          <option value="July">July</option>
+          <option value="August">August</option>
+          <option value="September">September</option>
+          <option value="October">October</option>
+          <option value="November">November</option>
+          <option value="December">December</option>
+        </select>
+        <select name="Category" id="Category" class="dropbtn">
+          <option> Category </option>
+          <option value="Shopping">Shopping</option>
+          <option value="Food">Food</option>
+          <option value="Bill">Bill</option>
+          <option value="Savings">Savings</option>
+          <option value="Health">Health</option>
+          <option value="Misc">Misc</option>
+        </select>
+      </div> 
+      <div class="category-post-text-input">
+        <input class="add-caption" type="text" placeholder="Payment location...." name="paidto" id="paidto"> 
+      </div> 
+      <div class="category-post-text-input">
+        <input class="add-caption" type="text" placeholder="Add Caption...." name="caption" id="caption">  
+      </div>                
+      <div class = "post-button-header-category">
+        <input type="submit" value="Post" class="button1" />
+      </div>
+    </form>
+</div>
+  <script src="/javascripts/main.js"></script>
+  </main>
+</body>
+</html>
