@@ -11,12 +11,13 @@ const User = require('../modules/users');
 const Posts = require('../modules/posts');
 const Friends = require('../modules/friends');
 const Expenditures = require('../modules/expenditures');
+const constants = require( '../constants.json' );
 
 function makeDb() {
   const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "root",
+    password: constants["DBPWD"],
     database: "wallygramdb",
   });
   return {
