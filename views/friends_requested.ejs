@@ -91,13 +91,13 @@
             <img src="/images/green_badge.jpg" class="badge-in-post" />
             <img src="/images/man1.jpg" class="post-image" />
             <h3 class="post-name">
-              <i><%= friend[i].friends_username %></i> (<%= friend[i].FriendName %>)
+              <i><%= friend[i].Username %></i>
             </h3>
           </div>
           <div class="single-post-like-comment d-flex flex-row">
             <button
               class="btn btn-light like-comment-button d-flex flex-row"
-              onclick="location.href='/acceptFriendRequest?id=<%= friend[i].friends_username %>'"
+              onclick="location.href='/acceptFriendRequest?id=<%= friend[i].Username %>'"
             >
               <img src="/images/tick.jpg" class="like-logo" />
               <p class="like-comment">Confirm</p>
@@ -105,7 +105,7 @@
             <!-- <p><%= friend[i].friends_username %></p> -->
             <button
               class="btn btn-light like-comment-button d-flex flex-row"
-              onclick="location.href='/deleteFriendRequest?id=<%= friend[i].friends_username %>'"
+              onclick="location.href='/deleteFriendRequest?id=<%= friend[i].Username %>'"
             >
               <img src="/images/cross.png" class="like-logo" />
               <p class="like-comment">Delete</p>
