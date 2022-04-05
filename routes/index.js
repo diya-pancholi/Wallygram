@@ -411,16 +411,28 @@ router.get("/deleteFriendRequest", function (req, res, next) {
 });
 
 router.post("/searchfriends", function (request, response, next) {
+  var curruser = request.session.uid;
+  console.log(request.session.uid);
 
   const db = makeDb();
 
-  const user = new User(db, request.body.findingfriend);
+  const user = new User(db, curruser);
 
   try {
     withTransaction( db, async () => {
-    const result = await user.getUserInfo();
+    const result = await user.getSearchedUserInfo(request.body.findingfriend);
+    console.log(result);
 
-    response.render("searchfriends", {findfriend : result});
+    if(result.length > 0)
+    {
+      response.render("searchfriends", {findfriend : result});
+    }
+    else
+    {
+      response.redirect("/friendsAccepted");
+    }
+    
+
     } );
   } catch ( err ) {
     if(err)
