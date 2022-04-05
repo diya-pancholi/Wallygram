@@ -68,7 +68,7 @@ class Posts
 
     getFeedComments()
     {
-      const result = (this.db).query(`SELECT * FROM comments INNER JOIN posts ON posts.Post_id=comments.post_id WHERE Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR Username IN (SELECT Username From friends WHERE friends_username = "${this.username}");`);
+      const result = (this.db).query(`SELECT * FROM comments INNER JOIN posts ON posts.Post_id=comments.post_id WHERE posts.Username IN (SELECT friends_username From friends WHERE Username = "${this.username}") OR posts.Username IN (SELECT Username From friends WHERE friends_username = "${this.username}");`);
       return result;
     }
 
