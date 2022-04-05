@@ -3,7 +3,7 @@ use wallygramdb;
 CREATE TABLE IF NOT EXISTS user_table(
   Username varchar(255) NOT NULL,
   _Name varchar(255) NOT NULL,
-  _Password varchar(20) NOT NULL,
+  _Password varchar(256) NOT NULL,
   Badge varchar(50) DEFAULT NULL,
   PRIMARY KEY (Username)
 );
@@ -13,13 +13,12 @@ CREATE TABLE IF NOT EXISTS user_table(
 FROM user_table
 where Username='GYANVI';*/
 
-INSERT into user_table(Username, _Name, _Password, Badge) values ('GYANVI','gyanvi tandon','idk','null');
+-- INSERT into user_table(Username, _Name, _Password, Badge) values ('GYANVI','gyanvi tandon','idk','null');
 
  -- checking if username and pasword exits or not at the time of login
 /* Select COUNT(*) as login_chk
 FROM user_table
 where Username='GYANVI' and _Password='idk';*/
-
 
 CREATE TABLE IF NOT EXISTS friends(
     Username varchar(255),
@@ -36,6 +35,12 @@ CREATE TABLE IF NOT EXISTS friends_req(
     FOREIGN KEY (friends_username) REFERENCES user_table(Username) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (Username,friends_username)
 );
+ALTER TABLE friends_req ADD FriendID int;
+ALTER TABLE friends ADD FriendID int;
+
+ALTER TABLE friends_req ADD FriendName VARCHAR(256) ;
+ALTER TABLE user_table ADD Bio VARCHAR(256) ;
+ALTER TABLE user_table ADD ID int ;
 
 
 CREATE TABLE IF NOT EXISTS category(
@@ -43,12 +48,15 @@ CREATE TABLE IF NOT EXISTS category(
     category_name varchar(255),
     PRIMARY KEY(id)
 );
+
+ALTER TABLE user_table MODIFY _Password VARCHAR(256) ;
+
 -- making categories
-INSERT into category values(201,'Food');
-INSERT into category values(202,'Savings');
-INSERT into category values(203,'Health');
-INSERT into category values(204,'Shopping');
-INSERT into category values(205,'Others');
+-- INSERT into category values(201,'Food');
+-- INSERT into category values(202,'Savings');
+-- INSERT into category values(203,'Health');
+-- INSERT into category values(204,'Shopping');
+-- INSERT into category values(205,'Others');
 
 CREATE TABLE IF NOT EXISTS Payment(
     payment_id int,
@@ -61,7 +69,11 @@ CREATE TABLE IF NOT EXISTS Payment(
     PRIMARY KEY(payment_id)
 );
 
-CREATE TABLE paid_by(
+ALTER TABLE Payment ADD Payment_month varchar(255);
+ALTER TABLE Payment ADD Category varchar(255);
+ALTER TABLE Payment ADD Username varchar(255);
+
+CREATE TABLE IF NOT EXISTS paid_by(
     payment_id int,
     username varchar(255),
     FOREIGN KEY (Username) REFERENCES user_table(Username) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -70,8 +82,8 @@ CREATE TABLE paid_by(
 );
 
 -- inserting in the payments
-Insert into Payment values(301, 'Haldiram', CURRENT_TIME(), 350, 'Debit_card',201);
-Insert into paid_by values(301,'GYANVI');
+-- Insert into Payment values(301, 'Haldiram', CURRENT_TIME(), 350, 'Debit_card',201);
+-- Insert into paid_by values(301,'GYANVI');
 
 
 CREATE TABLE IF NOT EXISTS posts(
@@ -83,6 +95,9 @@ CREATE TABLE IF NOT EXISTS posts(
     PRIMARY KEY (Post_id)
 );
 
+ALTER TABLE posts ADD LikesCount int;
+ALTER TABLE posts ADD CommentsCount int;
+
 CREATE TABLE IF NOT EXISTS Comparison_Type(
     Post_id int,
     Comp_month varchar(30),
@@ -93,9 +108,13 @@ CREATE TABLE IF NOT EXISTS Comparison_Type(
     FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+ALTER TABLE Comparison_Type ADD Category varchar(100);
+ALTER TABLE Comparison_Type ADD Comp_percent int;
+ALTER TABLE Comparison_Type ADD Curr_percent int;
+
 -- inserting posts of type comparison
-Insert into posts values(101,'Beautiful Posts','GYANVI',CURRENT_TIME(),'Comparison_Type');
-Insert into Comparison_Type values(101,'December','January',201);
+-- Insert into posts values(101,'Beautiful Posts','GYANVI',CURRENT_TIME(),'Comparison_Type');
+-- Insert into Comparison_Type values(101,'December','January',201);
 
 
 
@@ -107,9 +126,13 @@ CREATE TABLE IF NOT EXISTS Category_Type(
     FOREIGN KEY (payment_id) REFERENCES Payment(payment_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+ALTER TABLE Category_Type ADD Category varchar(100);
+ALTER TABLE Category_Type ADD Spending int;
+ALTER TABLE Category_Type ADD Spending_month varchar(255);
+
 -- inserting posts of type category
-Insert into posts values(102,'Foodie','GYANVI',CURRENT_TIME(),'Category_Type');
-Insert into Category_Type values(102,301);
+-- Insert into posts values(102,'Foodie','GYANVI',CURRENT_TIME(),'Category_Type');
+-- Insert into Category_Type values(102,301);
 
 
 CREATE TABLE IF NOT EXISTS likes(
@@ -134,7 +157,7 @@ CREATE TABLE IF NOT EXISTS comments(
     PRIMARY KEY (post_id,Username)
 );
 
-INSERT into comments values(101,'GYANVI','Trial');
+-- INSERT into comments values(101,'GYANVI','Trial');
 
 -- extracting users lists and their comments on a post
 /*Select username,caption
@@ -271,6 +294,3 @@ where category_name='Food');*/
 -- 				Payment_category=(Select id 
 -- 				from category
 -- 				where category_name='Food');
-
-
-
