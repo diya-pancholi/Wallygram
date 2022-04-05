@@ -1,20 +1,26 @@
 class User
 {
-    getUserInfo(db, username)
+    constructor(db, username)
     {
-      const result = db.query(`SELECT * FROM user_table where Username = "${username}";`);
+      this.db = db;
+      this.username = username;
+    }
+
+    getUserInfo()
+    {
+      const result = (this.db).query(`SELECT * FROM user_table where Username = "${this.username}";`);
       return result;
     }
 
-    addUser(db, username, name, password)
+    addUser(name, password)
     {
-      const result = db.query(`INSERT INTO user_table (Username,_Name,_Password) VALUES ("${username}", "${name}", "${password}");`);
+      const result = (this.db).query(`INSERT INTO user_table (Username,_Name,_Password) VALUES ("${this.username}", "${name}", "${password}");`);
       return result;
     }
 
-    checkLogIn(db, username, password)
+    checkLogIn(password)
     {
-      const result = db.query(`SELECT * FROM user_table WHERE Username = "${username}" AND _Password = "${password}";`);
+      const result = (this.db).query(`SELECT * FROM user_table WHERE Username = "${this.username}" AND _Password = "${password}";`);
       return result;
     }
 }

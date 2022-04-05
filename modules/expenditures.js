@@ -1,20 +1,26 @@
 class Expenditures
 {
-    getMonthlyCategoryWiseExpense(db, category, month, username)
+    constructor(db, username)
     {
-      const result = db.query(`SELECT SUM(Amount) FROM payment WHERE Category = "${category}" AND Payment_month = "${month}" AND Username = "${username}";`);
+      this.db = db;
+      this.username = username;
+    }
+
+    getMonthlyCategoryWiseExpense(category, month)
+    {
+      const result = (this.db).query(`SELECT SUM(Amount) FROM payment WHERE Category = "${category}" AND Payment_month = "${month}" AND Username = "${this.username}";`);
       return result;
     }
 
-    getMonthlyLocationWiseExpense(db, location, month, username)
+    getMonthlyLocationWiseExpense(location, month)
     {
-      const result = db.query(`SELECT SUM(Amount) FROM wallygramdb.payment WHERE Username = "${username}" AND Payment_month = "${month}" AND paid_to = "${location}";`);
+      const result = (this.db).query(`SELECT SUM(Amount) FROM wallygramdb.payment WHERE Username = "${this.username}" AND Payment_month = "${month}" AND paid_to = "${location}";`);
       return result;
     }
 
-    getMonthlyExpense(db, month, username)
+    getMonthlyExpense(month)
     {
-      const result = db.query(`SELECT SUM(Amount) FROM payment WHERE Payment_month = "${month}" AND Username = "${username}";`);
+      const result = (this.db).query(`SELECT SUM(Amount) FROM payment WHERE Payment_month = "${month}" AND Username = "${this.username}";`);
       return result;
     }
 }
